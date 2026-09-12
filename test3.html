@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Length Test 1 - RAS Prelims</title>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --panel-bg: #151e32;
+            --primary-blue: #1e3a8a;
+            --gold: #d4af37;
+            --text-main: #f8fafc;
+            --border: #2a3b5c;
+            --ans: #22c55e;
+            --not-ans: #ef4444;
+            --not-visited: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        header { background: linear-gradient(135deg, #0f172a, var(--primary-blue)); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); z-index: 10; }
+        .exam-title { font-size: 1.1rem; font-weight: bold; color: var(--gold); }
+        .timer-box { font-size: 1.1rem; font-weight: bold; background: #000; color: #fff; padding: 5px 15px; border-radius: 5px; border: 1px solid var(--border); }
+        
+        .warning-banner { display: none; background: var(--not-ans); color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 0.9rem; }
+
+        .main-container { display: flex; flex: 1; overflow: hidden; flex-direction: row; }
+        
+        .left-panel { flex: 1; display: flex; flex-direction: column; background: var(--panel-bg); position: relative; border-right: 1px solid var(--border); }
+        .q-header { background: #1e293b; padding: 12px 20px; border-bottom: 1px solid var(--border); font-weight: bold; font-size: 1.1rem; color: var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        
+        .jump-palette-btn { background: var(--primary-blue); color: #fff; border: 1px solid var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
+        
+        .q-content { flex: 1; padding: 20px; overflow-y: auto; font-size: 1.05rem; line-height: 1.6; }
+        .q-text { margin-bottom: 20px; font-weight: 500; }
+        
+        .option-label { display: block; padding: 10px 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: #1e293b; transition: 0.2s; }
+        .option-label:hover { border-color: var(--gold); }
+        .option-label input { margin-right: 12px; accent-color: var(--gold); transform: scale(1.2); }
+
+        .action-footer { background: #1e293b; padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+        .btn { padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; flex: 1; min-width: 120px; text-align: center; color: #fff; }
+        .btn-clear { background: #475569; }
+        .btn-prev { background: #0ea5e9; }
+        .btn-save { background: var(--ans); color: #000; }
+
+        .right-panel { width: 300px; background: #111827; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
+        .info-box { padding: 15px; text-align: center; background: #1f2937; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-main); }
+        
+        .palette-container { padding: 15px; flex: 1; overflow-y: auto; }
+        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .p-btn { width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--border); background: var(--not-visited); font-weight: bold; color: #fff; cursor: pointer; font-size: 0.9rem; }
+        .p-ans { background: var(--ans) !important; color: #000 !important; }
+        .p-not-ans { background: var(--not-ans) !important; }
+
+        .submit-section { padding: 15px; background: #1f2937; border-top: 1px solid var(--border); }
+        .btn-submit { width: 100%; padding: 12px; background: var(--gold); color: #000; border: none; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 1rem; }
+
+        .result-screen { display: none; padding: 30px 15px; background: var(--bg-color); height: 100%; overflow-y: auto; }
+        .score-box { max-width: 800px; margin: 0 auto; background: var(--panel-bg); border: 2px solid var(--gold); border-radius: 12px; padding: 30px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .stat-item { background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; }
+        
+        .review-section { max-width: 800px; margin: 30px auto; text-align: left; }
+        .review-card { background: var(--panel-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .review-q { font-weight: bold; font-size: 1.05rem; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .review-opt { margin-bottom: 8px; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #1e293b; }
+        .opt-correct { background: #14532d !important; border-color: #22c55e !important; font-weight: bold; }
+        .opt-wrong { background: #7f1d1d !important; border-color: #ef4444 !important; text-decoration: line-through; }
+        .review-sol { margin-top: 15px; padding: 12px; background: #0f172a; border-left: 4px solid var(--gold); font-size: 0.95rem; border-radius: 4px; }
+
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+        .modal-content { background: var(--panel-bg); padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; border: 2px solid var(--gold); }
+        .modal-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 15px; }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .right-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="warning-banner" id="warning">⚠️ Warning: Tab switching detected!</div>
+
+    <header id="header">
+        <div class="exam-title">Full Length Test 1 - RAS Prelims</div>
+        <div class="timer-box"><span id="timer">180:00</span></div>
+    </header>
+
+    <div class="main-container" id="test-screen">
+        <div class="left-panel">
+            <div class="q-header">
+                <span>Q.<span id="q-num-display">1</span> / 150</span>
+                <button class="jump-palette-btn" onclick="openModal()">Question Palette ☰</button>
+            </div>
+            <div class="q-content">
+                <div class="q-text" id="q-text">Loading question...</div>
+                <div id="options-container"></div>
+            </div>
+            <div class="action-footer">
+                <button class="btn btn-clear" onclick="clearResponse()">Clear</button>
+                <button class="btn btn-prev" onclick="prevQuestion()">Previous</button>
+                <button class="btn btn-save" id="btn-next" onclick="saveAndNext()">Save & Next</button>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="info-box">Marking: +2 | -0.66</div>
+            <div class="palette-container"><div class="palette-grid" id="palette-grid"></div></div>
+            <div class="submit-section"><button class="btn-submit" onclick="submitTest()">FINAL SUBMIT</button></div>
+        </div>
+    </div>
+
+    <div id="jumpModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--gold); text-align:center;">Question Palette</h3>
+            <div class="modal-grid" id="modal-palette-grid"></div>
+            <button onclick="closeModal()" style="width:100%; margin-top:15px; padding:10px; background:var(--primary-blue); color:#fff; border:none; border-radius:5px; font-weight:bold;">Close</button>
+        </div>
+    </div>
+
+    <div class="result-screen" id="result-screen">
+        <div class="score-box">
+            <h2 style="color: var(--gold); margin-bottom: 15px;">Test Submitted Successfully!</h2>
+            <div class="stats-grid">
+                <div class="stat-item">Score<br><strong id="res-score" style="color:var(--gold); font-size:1.4rem;">0</strong></div>
+                <div class="stat-item">Attempted<br><strong id="res-attempted">0</strong></div>
+                <div class="stat-item">Correct (+2)<br><strong id="res-correct" style="color:var(--ans);">0</strong></div>
+                <div class="stat-item">Wrong (-0.66)<br><strong id="res-wrong" style="color:var(--not-ans);">0</strong></div>
+            </div>
+            <a href="index.html" class="btn" style="background:var(--primary-blue); display:inline-block; margin-top:20px; text-decoration:none; padding:10px 20px;">Back to Dashboard</a>
+        </div>
+        <div class="review-section" id="review-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Gross State Domestic Product (GSDP) of Rajasthan for the year 2023-24 is approximately ___ percent of the Gross Domestic Product (GDP) of the whole country at current prices.",
+                options: ["3.22", "5.17", "6.47", "7.62"],
+                ans: 1,
+                solution: "GSDP of Rajasthan for 2023-24 is approximately 5.17% of India's GDP at current prices."
+            },
+            {
+                q: "The number of students who passed in an examination was four times the number of students who failed. If there were 35 less students and 9 more who failed, then the ratio of passed and failed students would have been 2:1. How many students were there in total?",
+                options: ["115", "135", "155", "165"],
+                ans: 2,
+                solution: "Let failed = x, passed = 4x. Solving the equations gives total students = 155."
+            },
+            {
+                q: "A started a business with a capital of Rs 54,000 and admitted B and C in it after 4 months and 6 months respectively. At the end of the year, the profit was divided among the three in the ratio of 1:4:5. What is the sum of the capital invested by B and C (in Rs)?",
+                options: ["8,46,000", "8,60,400", "8,64,000", "8,40,060"],
+                ans: 2,
+                solution: "Capital ratio calculation gives the combined investment of B and C as ₹8,64,000."
+            },
+            {
+                q: "A sum of Rs. 36,000 is divided into two parts A and B in such a way that the simple interest received on A and B after two years and four years respectively at the rate of 15% per annum is equal. Find the total interest received on A (in Rs.)?",
+                options: ["7,200", "5,400", "3,600", "1,800"],
+                ans: 0,
+                solution: "Total interest received on part A is ₹7,200."
+            },
+            {
+                q: "20 green and 15 red balls are put in the container, what can be the probability of choosing a green ball?",
+                options: ["3/5", "6/8", "20/35", "4/7"],
+                ans: 3,
+                solution: "Total balls = 35. Green balls = 20. Probability = 20/35 = 4/7."
+            },
+            {
+                q: "Statement-1- The amount of energy used in reaching from one trophic level to another remains constant. Statement-2- The amount of energy in an ecosystem remains constant and never changes.",
+                options: ["Both statements 1 and 2 are correct.", "Statement 1 is correct, but 2 is wrong.", "Statement 2 is correct, but 1 is wrong.", "Both statements 1 and 2 are wrong."],
+                ans: 3,
+                solution: "Both statements 1 and 2 are wrong. Energy flows according to the 10% rule and changes constantly."
+            },
+            {
+                q: "The line graph shows the production (in tonnes) and sales (in tonnes) of a company. What percentage (approximately) of the total production of the company over all the years is the total sales of the company? (correct to two decimal places)",
+                options: ["75", "72.55", "68.12", "78.44"],
+                ans: 3,
+                solution: "Percentage of total sales = (Total Sales / Total Production) × 100 = 78.44%."
+            },
+            {
+                q: "In which year the percentage increase in revenue compared to the previous year was less than 6%?",
+                options: ["2019", "2016", "2015", "2017"],
+                ans: 2,
+                solution: "In the year 2015, the percentage increase in revenue compared to the previous year was less than 6%."
+            },
+            {
+                q: "Which of the following is mismatched in terms of Ayurveda institutes and their numbers in the state?",
+                options: ["Anchal Maternity Center- 45", "Panchakarma Center- 80", "Yoga and Naturopathy Research Center- 33", "Ksharsutra center- 10"],
+                ans: 1,
+                solution: "The Panchakarma Center count is mismatched; the actual count is 82."
+            },
+            {
+                q: "When was Rajasthan Government Health Scheme (RGHS) launched?",
+                options: ["July 1, 2021", "June 19, 2018", "August 7, 2021", "January 1, 2017"],
+                ans: 0,
+                solution: "Rajasthan Government Health Scheme (RGHS) was launched on July 1, 2021."
+            },
+            {
+                q: "Recently, in which city of India, 'Pre-Clinical Network Facility' related to health research has been inaugurated?",
+                options: ["In Chennai", "In Jaipur", "In Faridabad", "In Gurugram"],
+                ans: 2,
+                solution: "It was inaugurated at the Transnational Health Science and Technology Institute in Faridabad."
+            },
+            {
+                q: "Under the 'Rashtriya Bal Swasthya Karyakram', health check-up is being done for how many identified diseases by trained 'mobile health team'?",
+                options: ["4", "40", "12", "17"],
+                ans: 1,
+                solution: "Health check-ups are conducted for 40 identified diseases under RBSK."
+            },
+            {
+                q: "'Ocean Drill, 2024' is the largest naval exercise of which of the following countries?",
+                options: ["China", "Russia", "America", "India"],
+                ans: 1,
+                solution: "'Ocean Drill, 2024' is the largest naval exercise of Russia."
+            },
+            {
+                q: "What was the motto of Paris Paralympic Games-2024?",
+                options: ["'Games with Destiny'", "'Wide Open Games'", "'Games Wide Open'", "'Games with Excellence'"],
+                ans: 2,
+                solution: "The motto of the Paris Paralympic Games 2024 was 'Games Wide Open'."
+            },
+            {
+                q: "On August 30, 2024, 4 Central Enterprises (CPSE) got the status of Navratna. What is the total number of Navratna (CPSE) in India at present?",
+                options: ["21", "22", "23", "25"],
+                ans: 3,
+                solution: "The total number of Navratna CPSEs in India reached 25."
+            },
+            {
+                q: "In the following question, a statement-reason (R) is given after the assertion (A). Choose the correct answer from the following options- Assertion (A): Dungarpur has the highest percentage of rural population in Rajasthan and Kota has the highest percentage of urban population. Reason (R): Jaisalmer has the lowest population density (17 persons/sq km).",
+                options: ["Both Assertion and Reason are correct statements, but Reason does not explain the Assertion.", "Both Assertion and reason are correct and Reason is the correct explanation of Assertion.", "Both Assertion and Reason are wrong statements.", "Assertion is the correct statement, Reason is the wrong statement."],
+                ans: 2,
+                solution: "Both Assertion and Reason are wrong statements in this context."
+            },
+            {
+                q: "Consider the following statements regarding India's first reusable hybrid rocket RHUMI-1- 1. It was launched on August 24, 2024 from Thiruvindhai, Chennai. 2. It has been developed by Tamil Nadu-based start-up Space India in collaboration with Martin Group. 3. 63 satellites were sent into suborbital trajectory by this rocket. 4. It has a CO2 trigger parachute system. Which of the above statements is/are correct?",
+                options: ["Only 1 and 4", "Only 2", "Only 1, 2 and 4", "Only 1 and 3"],
+                ans: 2,
+                solution: "Statements 1, 2 and 4 are correct."
+            },
+            {
+                q: "The Union Cabinet has approved the Pradhan Mantri Awas Yojana-Urban (PMAY-U) 2.0 on August 9, 2024. Which of the following statements is correct regarding its eligibility?",
+                options: ["Families with annual income up to Rs 4 lakh will be eligible under EWS.", "Families with annual income of Rs 3 to 6 lakh will be eligible under LIG.", "Under MIG, families with annual income of 6 to 8 lakhs will be eligible.", "None of the above"],
+                ans: 1,
+                solution: "Families with an annual income of ₹3 to ₹6 lakh are eligible under LIG."
+            },
+            {
+                q: "When was the Earth Observation Satellite 'EOS-08' and other small satellite 'SR-0' successfully launched?",
+                options: ["August 16, 2024", "August 15, 2024", "August 17, 2024", "August 18, 2024"],
+                ans: 0,
+                solution: "'EOS-08' was launched on August 16, 2024."
+            },
+            {
+                q: "India's first indigenously developed monkeypox RT-PCR kit has been launched by which of the following?",
+                options: ["Indian Council of Medical Research (ICMR) and Panacea Biotech", "Bharat Biotech International Limited", "Andhra Pradesh Medtech Zone (AMTZ)", "Hillman Laboratories"],
+                ans: 2,
+                solution: "It was launched by Andhra Pradesh Medtech Zone (AMTZ)."
+            },
+            {
+                q: "Which policy is being implemented to increase exports from the state?",
+                options: ["Export Promotion Policy", "Import Control Policy", "Trade Development Policy", "Industrial Policy"],
+                ans: 0,
+                solution: "Export Promotion Policy is being implemented to boost state exports."
+            },
+            {
+                q: "By 2031-32, how many megawatt capacity is to be ensured from renewable energy sources in Rajasthan?",
+                options: ["25000 MW", "33600 MW", "40000 MW", "50000 MW"],
+                ans: 1,
+                solution: "The target is 33,600 MW capacity from renewable energy sources by 2031-32."
+            },
+            {
+                q: "According to Rajasthan Budget 2024-25, at which places will new trauma centers be established?",
+                options: ["Jaipur, Udaipur, Kota", "Jaipur, Kolana, Dausa, Sanderao, Pali, Pratapgarh", "Jaipur, Jodhpur, Bikaner, Udaipur, Ajmer, Bharatpur", "Alwar, Sikar, Jhunjhunu, Banswara, Dungarpur, Pratapgarh"],
+                ans: 1,
+                solution: "New trauma centers will be set up at Jaipur, Kolana, Dausa, Sanderao, Pali, and Pratapgarh."
+            },
+            {
+                q: "According to Rajasthan Budget 2024, under which scheme, Road Safety Task Force will be established at each divisional headquarters?",
+                options: ["Road Safety Campaign", "Traffic Control Scheme", "Road Safety Scheme", "Traffic Control Scheme"],
+                ans: 0,
+                solution: "It relates to the Road Safety Campaign framework."
+            },
+            {
+                q: "According to Rajasthan Budget 2024, what is the main objective of setting up Farmer Producer Organizations (FPOs)?",
+                options: ["Increasing agricultural productivity", "Collective marketing", "Distribution of agricultural equipment", "Getting government assistance."],
+                ans: 1,
+                solution: "Collective marketing is the core objective of setting up FPOs."
+            },
+            {
+                q: "Recently balcony solar panels were tested in Jaipur, consider the following statements in this regard- 1. Rajasthan has become the first state in the country to test and launch balcony solar system. 2. It is a ready to use, plug and play solar system. 3. One kilowatt will be able to generate 200 units of electricity in a month. Identify the true statement using the following code-",
+                options: ["Only 1 and 2", "Only 3", "Only 2 and 3", "All 1, 2 and 3"],
+                ans: 0,
+                solution: "Only statements 1 and 2 are true (1 kW generates about 100 units, not 200)."
+            },
+            {
+                q: "For the first time in India, the Shompen tribes exercised their right to vote, where is this tribe found?",
+                options: ["Lakshadweep", "Andaman and Nicobar", "Arunachal Pradesh", "Meghalaya"],
+                ans: 1,
+                solution: "The Shompen tribe is found in the Andaman and Nicobar Islands."
+            },
+            {
+                q: "Where was India's largest climate clock installed on the occasion of Earth Day?",
+                options: ["Mumbai", "New Delhi", "Kolkata", "Jaipur"],
+                ans: 1,
+                solution: "India's largest climate clock was installed in New Delhi."
+            },
+            {
+                q: "By which year, the Medical Department has started the Malaria Crush program from April 1, 2024 for malaria elimination?",
+                options: ["2028", "2030", "2025", "None of the above"],
+                ans: 1,
+                solution: "The target for malaria elimination is set for 2030."
+            },
+            {
+                q: "According to the Nutrition Tracker Report, which district of the state has the highest number of malnourished children?",
+                options: ["Barmer", "Jaisalmer", "Jaipur", "Udaipur"],
+                ans: 3,
+                solution: "Udaipur has the highest number of malnourished children according to the report."
+            },
+            {
+                q: "Famous players of Rajasthan, Devanshi Katara and Rudraksh Khandelwal are associated with which sport?",
+                options: ["Judo", "Javelin throw", "Shooter", "Walking"],
+                ans: 2,
+                solution: "Devanshi Katara and Rudraksh Khandelwal are renowned shooting players."
+            },
+            {
+                q: "On 8 April 2024, 31st Foundation Day of Jawahar Kala Kendra, Jaipur was celebrated, when was it established?",
+                options: ["1992", "1993", "1994", "1995"],
+                ans: 1,
+                solution: "Jawahar Kala Kendra was established on April 8, 1993."
+            },
+            {
+                q: "The main advantage of the parliamentary form of government is that-",
+                options: ["Both the executive and the legislature work independently.", "It provides continuity to the policy and is more efficient.", "The executive remains accountable to the legislature.", "The head of the government cannot be changed without election."],
+                ans: 2,
+                solution: "The primary feature and advantage is that the executive remains accountable to the legislature."
+            },
+            {
+                q: "Which of the following statements is/are correct regarding the sovereignty of India? 1. India is a member of the Commonwealth. 2. India's sovereignty is reduced due to Commonwealth membership. Code:-",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1 nor 2"],
+                ans: 0,
+                solution: "Only statement 1 is correct; Commonwealth membership does not restrict sovereignty."
+            },
+            {
+                q: "How many types of justice have been provided in the Preamble of the Indian Constitution?",
+                options: ["Two", "Three", "One", "Four"],
+                ans: 1,
+                solution: "Three types of justice are mentioned: Social, Economic, and Political."
+            },
+            {
+                q: "Which of the following category of fundamental rights includes protection against discrimination in the form of untouchability?",
+                options: ["Right against exploitation", "Right to freedom", "Right to constitutional remedies", "Right to equality"],
+                ans: 3,
+                solution: "Protection against untouchability falls under the Right to Equality (Article 17)."
+            },
+            {
+                q: "Under which article of the Constitution of India, the Supreme Court of India has the right to issue various 'writs' for the enforcement of the fundamental rights of the citizens?",
+                options: ["Article 32", "Article 33", "Article 132", "Article 226"],
+                ans: 0,
+                solution: "Article 32 gives the Supreme Court powers to issue writs."
+            },
+            {
+                q: "Which article of the Indian Constitution is related to India's foreign policy?",
+                options: ["Article 380", "Article 312", "Article 60", "Article 51"],
+                ans: 3,
+                solution: "Article 51 contains Directive Principles relating to promotion of international peace and security."
+            },
+            {
+                q: "Consider the following statements about the Indian President- 1. He should be a citizen born in India. 2. He should have completed thirty-five years of age. 3. He should be eligible to be elected as a member of Parliament. Which of the statements given above is/are correct?",
+                options: ["Only 1", "Only 2", "Only 1 and 2", "Only 1 and 3"],
+                ans: 1,
+                solution: "Only statement 2 is correct; birth in India is not a requirement, being a citizen is sufficient."
+            },
+            {
+                q: "Consider the following statements- 1. The Constitution of India classifies ministers into four categories... 2. The total number of ministers... should not exceed 15% of the total members of the Lok Sabha. Which of the above statements is/are correct?",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1 nor 2"],
+                ans: 1,
+                solution: "Only statement 2 is correct regarding the 15% ministerial ceiling rule."
+            }
+            {
+                q: "Who among the following can participate in the proceedings of the Lok Sabha even though he is a member of the Rajya Sabha?",
+                options: ["Nominated member of the Rajya Sabha who is an expert in the field", "Deputy Chairman of the Rajya Sabha", "Minister, who is a member of the Rajya Sabha", "Leader of the House in the Rajya Sabha"],
+                ans: 2,
+                solution: "A Minister belonging to either House can speak and participate in the proceedings of both Houses."
+            },
+            {
+                q: "Which of the following statements about the election to the Lok Sabha is not correct?",
+                options: ["Election is held on the basis of adult suffrage.", "Election is conducted by the Election Commission.", "The list of voters for elections is prepared under the direction and control of the President.", "On the request of the Election Commission, the President provides the necessary staff..."],
+                ans: 2,
+                solution: "Statement (c) is incorrect because voter lists are prepared under the Election Commission."
+            },
+            {
+                q: "Regarding the budget-related procedure in Parliament, 'the amount of demand is to be reduced to one rupee' is called-",
+                options: ["Economic cut proposal", "Policy cut proposal", "Basic cut proposal", "Symbolic cut proposal"],
+                ans: 3,
+                solution: "Reducing a demand to Re 1 is a symbolic cut proposal."
+            },
+            {
+                q: "The power of the Supreme Court of India to decide disputes between the Center and the States comes under which jurisdiction?",
+                options: ["Appellate Jurisdiction", "Constitutional Jurisdiction", "Advisory Jurisdiction", "Original Jurisdiction"],
+                ans: 3,
+                solution: "Federal disputes fall under Original Jurisdiction (Article 131)."
+            },
+            {
+                q: "Which article of the Constitution authorises the Supreme Court to review the decision or order given by it?",
+                options: ["Article 137", "Article 139", "Article 130", "Article 138"],
+                ans: 0,
+                solution: "Article 137 empowers the Supreme Court to review its own judgments."
+            },
+            {
+                q: "According to which article of the Indian Constitution, the President of India (in consultation with the Chief Justice) transfers a judge of a High Court from one court to another?",
+                options: ["Article 222", "Article 227", "Article 230", "Article 237"],
+                ans: 0,
+                solution: "Article 222 governs the transfer of High Court judges."
+            },
+            {
+                q: "A member of the State Public Service Commission can be removed-",
+                options: ["By the Governor on the basis of impeachment in the Legislative Assembly", "By the Governor after the investigation by the Supreme Court", "By the President after the investigation by the Supreme Court", "By the Governor after the investigation by the High Court"],
+                ans: 2,
+                solution: "SPSC members can be removed by the President following Supreme Court inquiry."
+            },
+            {
+                q: "In the context of religious practices of India, what is the 'Sthanakvasi' sect related to?",
+                options: ["From Buddhism", "From Jainism", "From Vaishnavaism", "From Shaivism"],
+                ans: 1,
+                solution: "Sthanakvasi is a prominent sub-sect of Śvētāmbara Jainism."
+            },
+            {
+                q: "Match List I with List II and choose the correct answer using the code given below the lists- List I: A. Harappa B. Hastinapur C. Nagarjuna Konda D. Paithan. List II: 1. Godavari 2. Ravi 3. Ganga 4. Krishna",
+                options: ["1 2 3 4", "2 3 4 1", "4 3 2 1", "3 4 1 2"],
+                ans: 1,
+                solution: "Correct matching: A-2, B-3, C-4, D-1."
+            },
+            {
+                q: "The first recorded evidence of Sati Pratha has been obtained from-",
+                options: ["Eran", "Junagadh", "Mandsaur", "Sanchi"],
+                ans: 0,
+                solution: "The Eran pillar inscription (510 AD) provides the first epigraphical evidence of Sati."
+            },
+            {
+                q: "Match List I and List II... List I: A. Vishaadatt B. Varahamihir C. Charak D. Brahmagupta. List II: 1. Medicine 2. Drama 3. Astronomy 4. Mathematics",
+                options: ["1 3 4 2", "2 1 3 4", "2 3 1 4", "3 4 1 2"],
+                ans: 2,
+                solution: "Correct matching: A-2, B-3, C-1, D-4."
+            },
+            {
+                q: "Who among the following was given the title of 'Zari Kalam' by Emperor Akbar?",
+                options: ["Mohammad Hussain", "Mukammal Khan", "Abdussamad", "Mir Sayyed Ali"],
+                ans: 0,
+                solution: "Mohammad Hussain was awarded the title 'Zari Kalam'."
+            },
+            {
+                q: "Arrange the following in the correct chronological order: 1. Tughlaqabad Fort 2. Lodhi Garden 3. Qutub Minar 4. Fatehpur Sikri. Code :-",
+                options: ["3, 1, 4, 2", "3, 1, 2, 4", "1, 3, 2, 4", "1, 3, 4, 2"],
+                ans: 1,
+                solution: "Correct chronological order: Qutub Minar -> Tughlaqabad -> Lodhi Garden -> Fatehpur Sikri (3, 1, 2, 4)."
+            },
+            {
+                q: "In which year were the first three universities (Calcutta, Madras, Bombay) established in India?",
+                options: ["1857 AD", "1881 AD", "1885 AD", "1905 AD"],
+                ans: 0,
+                solution: "The first three modern universities were established in 1857 AD."
+            },
+            {
+                q: "Dar-ul-Uloom was established by-",
+                options: ["Maulana Shibli Numani", "Maulana Hussain Ahmed", "Maulvi Abdullah Chakralvi", "Maulana Ahmed Riza Aazan"],
+                ans: 0,
+                solution: "Established with contributions from scholars like Maulana Shibli Numani."
+            },
+            {
+                q: "Match List I with List II... List I: A. Chittagong Armory Attack B. Kakori Conspiracy C. Lahore Conspiracy D. Gadar Party. List II: 1. Lala Hardayal 2. Jatin Das 3. Surya Sen 4. Ramprasad Bismil",
+                options: ["3 4 1 2", "4 3 2 1", "3 4 2 1", "2 4 3 1"],
+                ans: 2,
+                solution: "Correct matching: A-3, B-4, C-2, D-1."
+            },
+            {
+                q: "During the freedom struggle, a parallel movement was started in Indian states (states ruled by Indian rulers like Kashmir, Nizam's Hyderabad, Travancore etc.). Its name was-",
+                options: ["Swaraj Movement", "State People's Movement", "Praja Mandal Movement", "More than one of the above"],
+                ans: 2,
+                solution: "It was known as the Praja Mandal / State People's Movement."
+            },
+            {
+                q: "Match List I with List II... List I (River): A. Godavari B. Mahanadi C. Damodar D. Kaveri. List II (Tributary): 1. Bhavani 2. Penganga 3. Shivnath 4. Barakar",
+                options: ["4 2 1 3", "2 3 4 1", "1 2 4 3", "3 1 2 4"],
+                ans: 1,
+                solution: "Correct matching: A-2, B-3, C-4, D-1."
+            },
+            {
+                q: "Match List I with List II... List I (City): A. Bangkok B. Phnom Penh C. Hanoi D. Yangon. List II (River): 1. Irrawaddy 2. Mekong 3. Menam (Chao Phraya) 4. Red River",
+                options: ["3 2 4 1", "4 1 3 2", "3 1 4 2", "4 2 3 1"],
+                ans: 0,
+                solution: "Correct matching: A-3, B-2, C-4, D-1."
+            },
+            {
+                q: "Kalahari desert is situated in? 1. Botswana 2. Namibia 3. Zaire 4. Zambia. Code-",
+                options: ["Only 1", "Only 2", "Only 1 and 2", "Only 3 and 4"],
+                ans: 2,
+                solution: "Kalahari spans Botswana and Namibia (1 and 2)."
+            },
+            {
+                q: "Which one of the following is not a nomadic agriculture?",
+                options: ["Chena", "Jhuming", "Milpa", "Fazenda"],
+                ans: 3,
+                solution: "Fazenda represents large coffee plantations in Brazil, not shifting/nomadic agriculture."
+            },
+            {
+                q: "Match List I and List II... List I (Iron-Steel Centre): A. Hamilton B. Birmingham C. Essen D. Anshan. List II (Country): 1. China 2. Canada 3. United Kingdom 4. Germany",
+                options: ["4 3 1 2", "2 1 4 3", "2 3 4 1", "3 4 2 1"],
+                ans: 2,
+                solution: "Correct matching: A-2, B-3, C-4, D-1."
+            },
+            {
+                q: "Which is the most populated island of India?",
+                options: ["Majuli", "Andaman", "Lakshadweep", "Salsette"],
+                ans: 3,
+                solution: "Salsette Island (on which Mumbai is situated) is India's most populous island."
+            },
+            {
+                q: "Examine the following statements... 1. Devprayag is situated at the confluence of Alaknanda and Bhagirathi rivers. 2. Rudraprayag is situated at the confluence of Alaknanda and Mandakini rivers. 3. Alaknanda river flows from Badrinath. 4. Kedarnath is considered as the biggest Peetha established by Adi Shankaracharya. Codes-",
+                options: ["Only 1, 2 and 3", "Only 2, 3 and 4", "Only 1, 2 and 4", "All of these"],
+                ans: 0,
+                solution: "Only statements 1, 2 and 3 are correct."
+            },
+            {
+                q: "Consider the following statements- 1. The duration of monsoon decreases from South India to North India. 2. The amount of annual rainfall in the plains of North India decreases from east to west. Which of the above statements is/are correct?",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1 nor 2"],
+                ans: 2,
+                solution: "Both statements 1 and 2 are correct."
+            },
+            {
+                q: "'Aman' rice is grown in-",
+                options: ["April-May", "June-July", "November-December", "May-June"],
+                ans: 2,
+                solution: "Aman winter rice is harvested around November-December."
+            },
+            {
+                q: "Which of the following coffee producing areas is not located in Karnataka?",
+                options: ["Chikmagalur", "Kodagu", "Bababudan", "Pulanage"],
+                ans: 3,
+                solution: "Pulanage is located in Tamil Nadu."
+            },
+            {
+                q: "Bharatmala Project is related to what?",
+                options: ["Improving connectivity of roads", "Connecting ports and railways", "Interlinking rivers", "Connecting major cities with gas pipelines"],
+                ans: 0,
+                solution: "Bharatmala Pariyojana is an umbrella program focused on optimizing highway efficiency."
+            },
+            {
+                q: "Which of the following statements is not correct regarding iron ore in India?",
+                options: ["Our country has mainly hematite and magnetite iron ore reserves.", "About 80% of the total accumulated reserves of iron ore in the country is in Jharkhand and Odisha.", "Bellary in Karnataka state is the main mining area of iron ore.", "Mayurbhanj district has an important place in Odisha in iron ore."],
+                ans: 1,
+                solution: "Statement (b) is incorrect regarding the distribution percentages."
+            },
+            {
+                q: "Match List I with List II... List I (Oil Refinery): A. Haldia B. Jamnagar C. Kochi D. Numaligarh. List II (State): 1. Assam 2. Kerala 3. Gujarat 4. West Bengal",
+                options: ["4 3 1 2", "4 3 2 1", "1 2 3 4", "3 4 2 1"],
+                ans: 1,
+                solution: "Correct matching: A-4, B-3, C-2, D-1."
+            },
+            {
+                q: "Which organization developed the Indian robot named 'Vyommitra'?",
+                options: ["C-DAC, Pune", "ISRO", "TIFR", "DRDO"],
+                ans: 1,
+                solution: "'Vyommitra' was developed by ISRO."
+            },
+            {
+                q: "Which of the following measures is mainly aimed at eliminating inequality in India?",
+                options: ["Mahatma Gandhi National Employment Guarantee Scheme (MGNREGA)", "Public Distribution System (PDS)", "Pradhan Mantri Jan Dhan Yojana", "Atal Pension Yojana"],
+                ans: 1,
+                solution: "PDS aims to provide food security and mitigate economic disparities."
+            },
+            {
+                q: "Select the synonymous word-pair for the given word-pair- Action-Reaction",
+                options: ["Disease: Cancer", "Death: Weakness", "Attack: Defense", "Introvert: Extrovert"],
+                ans: 2,
+                solution: "Attack: Defense reflects a mutual opposing/responsive dynamic."
+            },
+            {
+                q: "Consider the following statements- 1. Aurangzeb started a war against Rana Raj Singh of Mewar in 1679 AD. 2. Aurangzeb declared Vijay Singh as the ruler of Amer and named Amer as Mominabad. 3. In 1681 AD, a treaty was signed between Mewar ruler Jai Singh and Mughal emperor Aurangzeb. Choose the wrong statement-",
+                options: ["Only 1", "Only 2", "Only 3", "None of the above"],
+                ans: 3,
+                solution: "None of the statements are wrong; all are historically accurate."
+            },
+            {
+                q: "Match the following- List-I (Haveli): A. Haveli of Tarachand Ruia B. Haveli of Bachhawats C. Haveli of Salim Singh D. Haveli of Bagadiyan. List-II (District): 1. Bikaner 2. Jhunjhunu 3. Sikar 4. Jaisalmer Code:-",
+                options: ["3 1 4 2", "2 4 1 3", "3 4 1 2", "2 1 4 3"],
+                ans: 2,
+                solution: "Correct matching: A-3, B-1, C-4, D-2."
+            },
+            {
+                q: "Consider the following statements- 1. The temple of Aai Mata located at Bilada is called 'Badeer'. 2. Basyoda festival is related to Shila Mata. 3. Tanot Mata temple is also known as 'Yuddha Devi Mandir'. Which of the above is/are correct statement?",
+                options: ["Only 1 and 2", "Only 2 and 3", "All 1, 2 and 3", "Only 1 and 3"],
+                ans: 3,
+                solution: "Only statements 1 and 3 are correct (Basyoda is related to Sheetla Mata)."
+            },
+            {
+                q: "Statement I: Pabu's idol is made in the form of a sword-wielding horse rider. Statement II: Tejaji's idol is made in the form of a spear-wielding horse rider. Codes:-",
+                options: ["Only statement I is correct, statement II is wrong.", "Only statement II is correct, statement I is wrong.", "Both statements are wrong.", "Both statements are correct."],
+                ans: 2,
+                solution: "Both statements are wrong as their weapons/representations are swapped."
+            },
+            {
+                q: "Match the institution and year of establishment: List-I: A. Rajasthan Seva Sangh B. Marwar Hitkarini Sabha C. All India Native State Council D. Narendra Mandal. List-II: 1. 1921 2. 1927 3. 1923 4. 1919 Code:-",
+                options: ["4 3 2 1", "2 4 1 3", "1 2 4 3", "4 2 3 1"],
+                ans: 3,
+                solution: "Correct matching: A-4, B-2, C-3, D-1."
+            },
+            {
+                q: "Which of the following pairs is not correctly matched?",
+                options: ["Mridang- Avanaddha (Percussion) instrument", "Manjira- Ghana (Ideophones) instrument", "Shankh- String (Tat) instrument", "Flute- Sushira (Wind) instrument"],
+                ans: 2,
+                solution: "Shankh is a wind instrument (Sushira), hence pair (c) is incorrect."
+            },
+            {
+                q: "Consider the following statements- 1. In 1872 A.D., 'Nagari' civilization was discovered by R.G. Bhandarkar. 2. 'Baror' civilization is situated on the banks of river Saraswati. 3. Clay statue of a woman wearing a turban is found from the civilization of Naliasar. 4. The archaeological site of 'Jodhpura' is also known as 'Dhartul Ghat'. Choose the correct statement-",
+                options: ["Only 1 and 3", "Only 2 and 4", "Only 3", "All of the above"],
+                ans: 3,
+                solution: "All statements listed are correct."
+            }
+            {
+                q: "Consider the following statements- 1. He renounced the title of 'Rai Bahadur' in the Indian Independence Movement. 2. In 1920, he was made the President of the Reception Committee of the Nagpur Session of the Congress. 3. In 1921, he established Satyagraha Ashram in Wardha. 4. He set an example by keeping a Harijan servant at his home. The above statements are related to which personality of Rajasthan?",
+                options: ["Jamnalal Bajaj", "Hiralal Shastri", "Ghanshyam Das Birla", "Manikya Lal Verma"],
+                ans: 0,
+                solution: "These details refer to Jamnalal Bajaj."
+            },
+            {
+                q: "Which of the following statements is false regarding Lakha Khan Manganiyar?",
+                options: ["He is known as a renowned Sarangi player.", "He is a 'Sindhi Sarangi' player which has more strings than the 'Gujarati Sarangi'.", "He was awarded the Padma Shri in the year 2021 for playing Sarangi.", "He is a resident of Raneri village in Jaisalmer district."],
+                ans: 3,
+                solution: "He is a resident of Raneri village in Jodhpur district, not Jaisalmer."
+            },
+            {
+                q: "Indian farmers are dissatisfied with the introduction of 'Terminator Seed Technology', because seeds produced by this technology are likely to-",
+                options: ["Show poor germination", "Despite high quality, low yielding plants", "Grow sexually sterile plants", "Grow plants incapable of producing germinable seeds"],
+                ans: 2,
+                solution: "Terminator technology yields sexually sterile seeds, forcing farmers to buy seeds afresh every season."
+            },
+            {
+                q: "Interferon produced by recombinant DNA technology is used for the treatment of which of the following?",
+                options: ["Cancer", "Diabetes", "Kidney", "Haemophilia"],
+                ans: 0,
+                solution: "Interferons are utilized in cancer immunotherapy."
+            },
+            {
+                q: "'Nano-plug' is related to-",
+                options: ["A small bullet", "A small hearing aid", "A small rocket launcher", "None of the above"],
+                ans: 1,
+                solution: "Nano-plug refers to a tiny hearing aid device."
+            },
+            {
+                q: "Quantum dot is-",
+                options: ["An electron microscope image of nano structures smaller than 1 nanometer", "A nanoscale analog of a radio antenna", "A hypothetical nanorobot", "A semiconductor nano structure"],
+                ans: 3,
+                solution: "Quantum dots are semiconductor nanostructures."
+            },
+            {
+                q: "Which will be the smallest and fastest computer imitating the functioning of the brain?",
+                options: ["Supercomputer", "Quantum Computer", "PARAM-10000", "IBM chips"],
+                ans: 1,
+                solution: "Quantum computers mimic complex cognitive processing."
+            },
+            {
+                q: "The incorrectly matched is-",
+                options: ["Ghodi Geet - at the time of Ghodchadhi ritual on the groom's departure", "Jachcha Geet - at the time of birth of a child in the family", "Jala Geet - at the time of well worship after the child's birth", "Rasiya Geet - at the time of Holi festival"],
+                ans: 2,
+                solution: "Jala Geet is sung when welcoming the groom's procession, not during well worship."
+            },
+            {
+                q: "Match the following- List-I: A. Garasia community B. Gurjar community C. Bhil community D. Sahariya community. List-II: 1. Gavari dance 2. Sang dance 3. Chari dance 4. Mandal dance. Code:-",
+                options: ["4 1 3 2", "4 3 1 2", "1 4 2 3", "3 4 2 1"],
+                ans: 1,
+                solution: "Correct community-dance matching: A-4, B-3, C-1, D-2."
+            },
+            {
+                q: "Choose the incorrect statement from the following-",
+                options: ["Hadoti dialect is considered to be a subdialect of Dhundhari.", "Rangdi dialect is harsh.", "Most of the literature of Dadupantha is in Dhundhari dialect.", "The works of Dayabai, Sahajobai, Saint Charandas etc. are in Ahirwati dialect."],
+                ans: 3,
+                solution: "Statement (d) is incorrect; their works are primarily in Mewati/Braj dialect."
+            },
+            {
+                q: "Consider the following statements in the context of Global Happiness Index 2024- 1. In the year 2024, 143 countries were included in this report. 2. The top three countries in this index were Finland, Denmark, Iceland respectively. 3. Lebanon has secured the last position in this index. Which of the above statements is/are correct?",
+                options: ["Only 2 and 3", "All 1, 2 and 3", "Only 1 and 2", "Only 2"],
+                ans: 2,
+                solution: "Only statements 1 and 2 are correct."
+            },
+            {
+                q: "What is the objective of Pradhan Mantri Mudra Yojana?",
+                options: ["To provide pension to old and helpless people.", "To bring small entrepreneurs into the formal financial system.", "To provide loans to poor farmers for cultivation of special crops.", "To fund voluntary organizations engaged in skill development and employment generation."],
+                ans: 1,
+                solution: "MUDRA aims to fund and formalize micro-enterprises."
+            },
+            {
+                q: "Consider the following statements with reference to Wholesale Price Index- 1. Under this, inflation is measured in the last stage of production. 2. This index is released by the National Statistical Office of the Ministry of Planning and Statistics Enforcement. Which of the above is/are correct?",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1 nor 2"],
+                ans: 3,
+                solution: "WPI measures wholesale/early stage, and it is released by Office of Economic Adviser (DPIIT), hence both are incorrect."
+            },
+            {
+                q: "Consider the following statements- 1. The expenditure of the government, which neither increases the assets nor decreases the liabilities, is called revenue expenditure. 2. Expenditure on defense expenditure and subsidy comes under revenue expenditure. Which of the above statements is/are correct?",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1 nor 2"],
+                ans: 2,
+                solution: "Both statements 1 and 2 are correct."
+            },
+            {
+                q: "Which statement is correct about Banking Ombudsman in India?",
+                options: ["Only public sector banks are covered under the Banking Ombudsman Scheme.", "Banking Ombudsman is a senior officer appointed by the Reserve Bank of India to redress customer grievances.", "Banking Ombudsman charges a nominal fee for registering and resolving customer complaints.", "Banking Ombudsman is a quick forum for redressal of grievances of banks under SEBI."],
+                ans: 1,
+                solution: "The Ombudsman is appointed by RBI for customer grievance redressal free of cost."
+            },
+            {
+                q: "Who selects the Chairmen of Public Sector Banks?",
+                options: ["Bank of India", "Bank Board Bureau", "Union Finance Ministry", "Management of the concerned bank"],
+                ans: 1,
+                solution: "Selected via the Bank Board Bureau (now FSI)."
+            },
+            {
+                q: "Consider the following statements- 1. Net national product of the country reflects the national income of the country. 2. In India, national income is measured by the National Statistical Office from 2020-21. Which of the above statements is/are correct?",
+                options: ["Only 1", "Only 2", "Both 1 and 2", "Neither 1, nor 2"],
+                ans: 2,
+                solution: "Both statements 1 and 2 are correct."
+            },
+            {
+                q: "In which year the Securities and Exchange Board of India was established by the Government of India to protect the interests of investors in securities and to promote and regulate the securities market?",
+                options: ["1997", "1995", "1992", "2000"],
+                ans: 2,
+                solution: "SEBI was established in 1992."
+            },
+            {
+                q: "Consider the following statements regarding population density in Rajasthan- 1. The population density is lowest in districts of desert areas. 2. The population density in the state is 382 persons per square kilometer. 3. Dausa is one of the districts with the highest population density. Choose the true statement from the above-",
+                options: ["Only 1 and 3", "Only 1 and 2", "Only 2 and 3", "All of the above"],
+                ans: 1,
+                solution: "Only statements 1 and 2 are correct."
+            },
+            {
+                q: "The chemical composition of biogas includes the following- 1. Methane 2. Carbon-di-oxide 3. Hydrogen 4. Ozone. Code-",
+                options: ["Only 2, 3 and 4", "Only 1, 2 and 3", "Only 1, 3 and 4", "All of the above"],
+                ans: 1,
+                solution: "Methane, carbon dioxide, and hydrogen comprise biogas (1, 2, and 3)."
+            },
+            {
+                q: "The incorrectly matched pair of the following are- Ecosystem / Related feature 1. Aravalli ecosystem / Has maximum bird population and maximum biodiversity 2. Eastern plain ecosystem / Has maximum biodiversity 3. Hadoti ecosystem / Has maximum aquatic biodiversity. Code:",
+                options: ["Only 1 and 3", "Only 1 and 2", "Only 2 and 3", "None of these"],
+                ans: 1,
+                solution: "Only pairs 1 and 2 are correctly matched regarding regional ecological features."
+            },
+            {
+                q: "Maize crop is the main crop of which of the following agro-climatic regions? 1. Sub-humid Southern Plains region 2. Humid southern plains region 3. Humid south-eastern plains region",
+                options: ["Only 1 and 2", "Only 2 and 3", "Only 1 and 3", "All 1, 2 and 3"],
+                ans: 0,
+                solution: "Maize is prominent in Sub-humid and Humid Southern plains (1 and 2)."
+            },
+            {
+                q: "The correctly matched pair(s) related to Pachpadra lake of the following is/are- 1. Restan - Salt obtained from the lake 2. Kharwal - Shrub useful in salt production 3. Morli - Salt extracting tribe.",
+                options: ["Only 1 and 2", "Only 1", "Only 3", "All of the above"],
+                ans: 1,
+                solution: "Only statement 1 is correct."
+            },
+            {
+                q: "Match the following- List-I (Lift Canal): A. Jai Narayan Vyas B. Chaudhary Kumbharam C. Panna Lal Barupal D. Dr. Karni Singh. List-II (Benefited Districts): 1. Bikaner, Nagaur 2. Jodhpur, Bikaner 3. Jodhpur, Jaisalmer 4. Hanumangarh, Churu. Code:-",
+                options: ["3 1 2 4", "1 2 3 4", "3 4 1 2", "4 1 3 2"],
+                ans: 2,
+                solution: "Correct matching: A-3, B-4, C-1, D-2."
+            },
+            {
+                q: "In the following question an Assertion (A) is followed by a Statement-Reason (R). Assertion (A): Jaisalmer, Bikaner, Sriganganagar, Hanumangarh and some part of Churu in Rajasthan are tropical dry areas according to Koppen. Reason (R): Coppen has therefore placed this part in the category of BShw. Choose the correct answer from the following options-",
+                options: ["Both Assertion and Reason are correct statements but Reason does not explain Assertion.", "Both Assertion and Reason are correct and Reason is the correct explanation of Assertion.", "Both Assertion and Reason are wrong statements.", "Assertion is the correct statement Reason is the wrong statement."],
+                ans: 1,
+                solution: "Both Assertion and Reason are correct, and Reason explains Assertion."
+            },
+            {
+                q: "The term 'Golden Drops' is related to- 1. South-west monsoon 2. Mediterranean sea disturbance 3. North-east monsoon",
+                options: ["Only 1 and 2", "Only 1 and 3", "Only 2", "All of the above"],
+                ans: 2,
+                solution: "Golden Drops (Maawat) relate to Mediterranean western disturbances."
+            },
+            {
+                q: "Consider the following statements- 1. Entisol soil is found in the dry- semi-arid climate region to the west of Aravali. 2. The most commonly found scientific soil in Rajasthan is Aridosol. 3. Vertisol is black and chernozem soil. Choose the incorrect statement from the above-",
+                options: ["Only 3", "Only 2", "Only 1", "None of these"],
+                ans: 3,
+                solution: "None of these statements are incorrect; all are accurate."
+            },
+            {
+                q: "Which of the following option arranges the geographical classification of forests in descending order according to their percentage-",
+                options: ["Tropical Thorny Forest- Tropical Dhok Forest- Tropical Dry Monsoon Forest-Tropical Teak Forest", "Tropical Dhok Forest- Tropical Dry Monsoon Forest-Tropical Teak Forest- Subtropical Evergreen Forest", "Tropical Dry Monsoon Forest- Tropical Teak Forest-Tropical Dhok Forest-Tropical Thorny Forest", "Subtropical Evergreen Forest- Tropical Thorny Forest- Tropical Dry Teak Forest- Tropical Dhok Forest"],
+                ans: 1,
+                solution: "Descending order matches option (b)."
+            },
+            {
+                q: "The incorrectly matched pair of the following is- Specially shaped hills / Related to district",
+                options: ["Spherical / Barmer", "Crescent shaped / Bundi", "Spiral shaped / Ajmer", "Saucer shaped / Rajsamand"],
+                ans: 3,
+                solution: "Saucer-shaped hills are located in Udaipur (Girwa basin), not Rajsamand."
+            },
+            {
+                q: "In which article of the Constitution is the format of oath of the Governor given?",
+                options: ["Article 158", "Article 159", "Article 154", "Article 155"],
+                ans: 1,
+                solution: "Article 159 defines the oath or affirmation of the Governor."
+            },
+            {
+                q: "If a person who is not a member of the State Legislature is made a Minister of the State, then what is the constitutional provision in this matter?",
+                options: ["His election should be held within six months.", "He resigns.", "He is removed by the Governor.", "He is removed by a no-confidence motion."],
+                ans: 0,
+                solution: "He must secure election to the legislature within six months."
+            },
+            {
+                q: "Which is the district with the least number of assembly seats?",
+                options: ["Dholpur, Jaisalmer", "Dholpur, Dausa", "Pratapgarh, Jaisalmer", "Pratapgarh, Dausa"],
+                ans: 2,
+                solution: "Pratapgarh and Jaisalmer have the minimum assembly seats (2 each)."
+            },
+            {
+                q: "Who is the first judge to serve for the longest time in Rajasthan High Court?",
+                options: ["Kailash Nath Wanchoo", "Sarju Prasad", "J.M. Panchal", "Sharat Kumar Ghosh"],
+                ans: 0,
+                solution: "Justice Kailash Nath Wanchoo served as the first and longest-serving Chief Justice."
+            },
+            {
+                q: "In Rajasthan, to whom do the Sarpanch, Deputy Sarpanch and Ward Panch of Gram Panchayat address their resignation?",
+                options: ["Zila Pramukh", "Development Officer", "Head of Panchayat Samiti", "District Collector"],
+                ans: 1,
+                solution: "Resignations are submitted to the Development Officer (Vikas Adhikari)."
+            },
+            {
+                q: "The Governor appoints the Chairman and members of Rajasthan Human Rights Commission on the recommendation of a committee, whose chairman is-",
+                options: ["Minister in charge, Home Department", "Chief Minister", "Leader of Opposition in the Legislative Assembly", "Speaker of the Legislative Assembly"],
+                ans: 1,
+                solution: "The Chief Minister chairs the recommendation committee."
+            },
+            {
+                q: "Which of the following former women members of Rajasthan Public Service Commission has also been a member of Union Public Service Commission? 1. Mrs. Kanta Kathuria 2. Mrs. Kamla Bhil 3. Dr. (Mrs.) Prakashwati Sharma 4. Mrs. Divya Singh. Choose the correct answer-",
+                options: ["Only 1 and 4", "Only 1 and 3", "Only 2 and 3", "Only 1, 2 and 3"],
+                ans: 1,
+                solution: "Only statements 1 and 3 are correct."
+            },
+            {
+                q: "'Rajasthan Sampark' portal can be used-",
+                options: ["To collect information under R.T.I.", "As a grievance redressal system.", "To guarantee the provision of public services.", "As a social audit platform."],
+                ans: 1,
+                solution: "Rajasthan Sampark functions as a state-level grievance redressal platform."
+            },
+            {
+                q: "Which statement is not correct with reference to Lokayukta in Rajasthan?",
+                options: ["Investigates cases of corruption but not maladministration.", "The Chief Minister is outside his jurisdiction.", "He submits his annual report to the Governor.", "His recommendations are binding on the government."],
+                ans: 3,
+                solution: "Statement (d) is incorrect because the Lokayukta's recommendations are advisory, not binding."
+            },
+            {
+                q: "The clinical pathology reports of two children were as given below- Mamta: Age 11 years, Female, Haemoglobin- 11.0 g/dl. Neeraj: Age 13 years, Male, Haemoglobin- 8.5 g/dl. Which of the following conclusions can be drawn on the basis of the above report?",
+                options: ["Mamta is suffering from anaemia.", "Neeraj is suffering from anaemia.", "Both are suffering from anaemia.", "Both are not suffering from anaemia."],
+                ans: 1,
+                solution: "Neeraj's haemoglobin level (8.5 g/dl) indicates anaemia."
+            },
+            {
+                q: "The name of the drug commonly used to control drug addiction is-",
+                options: ["Ascorbic acid", "Benzoic acid", "Betadine", "Folic acid"],
+                ans: 0,
+                solution: "Ascorbic acid (Vitamin C) is commonly deployed as a complementary aid in detox/addiction management protocols."
+            }
+            {
+                q: "In the following question, Assertion (A) is followed by a Statement-Reason (R). Assertion (A): Preservatives are added to food items. Reason (R): Preservatives prevent the growth of microorganisms. Choose the correct answer from the following options-",
+                options: ["Both Assertion and Reason are correct statements, but Reason does not explain the Assertion.", "Both Assertion and Reason are correct and Reason is the correct explanation of Assertion.", "Both Assertion and Reason are wrong statements.", "Assertion is the correct statement and Reason is the wrong statement."],
+                ans: 1,
+                solution: "Both are correct, and Reason explains Assertion."
+            },
+            {
+                q: "The world's first 3D rocket was launched from Sriharikota, its name from the following is-",
+                options: ["Shiv Shakti", "Agnibaan", "Trishul", "Veer Hanuman"],
+                ans: 1,
+                solution: "Agnibaan SOrTeD is the 3D-printed rocket."
+            },
+            {
+                q: "A statement is followed by two assumptions I and II. On the basis of the statement and the assumptions given after it, decide which assumption(s) is/are implicit in the statement. Statement:- If it does not rain for the whole month, then most of the farmers will be in trouble this year. Assumptions:- I. Timely rain is necessary for farming. II. Generally, most of the farmers depend on rain.",
+                options: ["Neither assumption I nor assumption II is implicit.", "Both the assumptions are implicit.", "Only assumption II is implicit.", "Only assumption I is implicit."],
+                ans: 1,
+                solution: "Both assumptions are implicit."
+            },
+            {
+                q: "Observe the following argument and find the correct form- 'A' has the characteristics of 'X' and 'Y'. 'B' has the characteristics of 'X' and 'Y'. 'A' has the characteristics of 'Z'. And 'B' has one of the characteristics of 'Z'. Choose the correct answer from the options given below-",
+                options: ["Argument from Statistics", "Argument from Authority", "Argument from Analogy", "Mathematical Argument"],
+                ans: 2,
+                solution: "This represents an Argument from Analogy."
+            },
+            {
+                q: "Which of the following statements are logically equivalent? 1. All non-trees are non-animals. 2. No animal is tree. 3. Some animals are not trees. 4. No tree is animal. Choose the correct answer from the options given below",
+                options: ["Only 1 and 4", "Only 1 and 2", "Only 2 and 4", "Only 2 & 3"],
+                ans: 2,
+                solution: "Statements 2 and 4 ('No animal is tree' and 'No tree is animal') are logically equivalent."
+            },
+            {
+                q: "Statement: Researchers are feeling frustrated because libraries are not equipped to provide the right information to the right users at the right time in the required format. Even the users are aware of the various services available to them. Course of Action: I. All information available in libraries should be computerised to provide faster services to the users. II. Library staff should be trained in computer operations.",
+                options: ["Only I follows.", "Only II follows.", "Either I or II follows.", "Both I and II follow."],
+                ans: 3,
+                solution: "Both courses of action follow to fix library limitations."
+            },
+            {
+                q: "Read the information given below carefully and answer the given questions. A recruitment process in an accounting organisation requires the following eligibility criteria for the candidates: (i) Graduate in commerce with minimum 60% marks. (ii) Age not less than 24 years and not more than 40 years as on 1-7-2017. (iii) Candidates should have at least 2 years of work experience after education. (iv) They should have secured 55% marks in the selection process. However, if the candidate fulfils the above criteria except the following: (A) In case of (i) if the candidate is not a graduate in commerce but has a post graduate degree in finance with 60% marks, he should approach the Institute of Finance Management. (B) In case of (iii) if the candidate fulfils the eligibility criteria of at least 2 years of work experience after education, not only that he has secured 75% marks in the selection process, he may be referred for trainee accountant. On the basis of the above information decide whether the following candidates are eligible for the selection process and select the appropriate option. Anurag Kumar has 6 years of work experience after education. His date of birth is 05-4-1992. He has secured 62% marks in the selection process. He has done graduation in commerce and secured 76% marks.",
+                options: ["Finance Manager can be referred.", "Should be selected.", "Should not be selected.", "Trainee Accountant can be referred."],
+                ans: 3,
+                solution: "Trainee Accountant referral criteria apply based on work experience and marks."
+            },
+            {
+                q: "0, 5, 12, 23, 36, ?",
+                options: ["29", "53", "51", "55"],
+                ans: 1,
+                solution: "The sequential difference pattern yields 53."
+            },
+            {
+                q: "In a certain code language, 'SET' is coded as '37' and 'MIX' is coded as '35'. How will 'WAR' be coded in that language?",
+                options: ["39", "21", "32", "29"],
+                ans: 0,
+                solution: "Applying letter code values yields 39."
+            },
+            {
+                q: "A introduces B saying, 'He is the husband of the granddaughter of my father's father.' Assuming A to be a male, how is B related to A?",
+                options: ["Grandson", "Brother", "Brother-in-law", "Cousin"],
+                ans: 2,
+                solution: "B is the husband of A's granddaughter's equivalent, making him brother-in-law/related contextually."
+            },
+            {
+                q: "Shravan starts from point Y and walks 5 km towards north. Then he turns right, walks 5 km, turns right and walks 7 km. Then he turns right and walks 15 km. Then he turns right and walks 2 km. Finally he turns right, walks 5 km and stops at point M. In which direction and how much distance should he cover from point M to point Y? (All rotations are 90 degree rotations only.)",
+                options: ["East direction, 5 km.", "West direction, 5 km.", "East direction, 15 km.", "North Direction, 10 km."],
+                ans: 0,
+                solution: "Distance calculation and directional trace shows East direction, 5 km."
+            },
+            {
+                q: "Which vitamin helps the body to absorb calcium?",
+                options: ["Vitamin B", "Vitamin A", "Vitamin C", "Vitamin D"],
+                ans: 3,
+                solution: "Vitamin D is essential for calcium absorption."
+            },
+            {
+                q: "The audible frequency range for a normal human is about",
+                options: ["20 Hz to 2000 Hz", "0 Hz to 20 kHz", "20 Hz to 20 kHz", "0 Hz to 2000 Hz"],
+                ans: 2,
+                solution: "Standard audible frequency range is 20 Hz to 20,000 Hz (20 kHz)."
+            },
+            {
+                q: "The ribosome is the workplace for which of the following?",
+                options: ["Protein synthesis", "Photosynthesis", "Fat synthesis", "Respiration"],
+                ans: 0,
+                solution: "Ribosomes act as protein factories/workplace for protein synthesis."
+            },
+            {
+                q: "Light waves are what type of waves?",
+                options: ["Transverse wave", "Longitudinal wave", "Both (a) and (b)", "None"],
+                ans: 0,
+                solution: "Light waves are electromagnetic transverse waves."
+            },
+            {
+                q: "Which of the following statements is/are correct? 1. Plants convert energy obtained from sunlight into food stored as carbohydrates. 2. Plants have chlorophyll. 3. Plant cells do not have cell wall. Code:-",
+                options: ["Only 1 is correct.", "Only 1 and 2 are correct.", "Only 1 and 3 are correct.", "All are correct."],
+                ans: 1,
+                solution: "Only statements 1 and 2 are correct (plant cells do have cell walls)."
+            },
+            {
+                q: "Which juice secreted by the organs in the alimentary canal is important in the digestion of fat?",
+                options: ["Pancreatic juice, saliva", "Hydrochloric acid, mucus", "Bile juice, pancreatic juice", "Saliva, hydrochloric acid"],
+                ans: 2,
+                solution: "Bile juice and pancreatic juice help break down fats."
+            },
+            {
+                q: "Which of the following helps in blood clotting?",
+                options: ["Vitamin A", "Vitamin D", "Vitamin K", "Folic acid"],
+                ans: 2,
+                solution: "Vitamin K is vital for blood coagulation."
+            },
+            {
+                q: "At which point of the earth there is no gravity?",
+                options: ["At the north and south pole", "At the equator", "At the surface of the sea", "At the centre of the earth"],
+                ans: 3,
+                solution: "Gravity approaches zero at the center of the earth."
+            },
+            {
+                q: "Answer questions based on the information given below. Two companies 'S' and 'T' sold a total of 3900 watches in the month of February, March, April and May. The ratio of watches sold by company S in February and March is 5:3. The total number of watches sold by company T in all the four months is 1700. The number of watches sold by company S in April is 25 percent less than the number of watches sold by the same company in May. The total number of watches sold by company S and T in February was 1200. The number of watches sold by company 'S' in March was 16.66 percent less than the total number of watches sold by company T in April. The total number of watches sold by company 'S' in February was 500. The number of watches sold by company 'T' in May is 340 more than that in March. Find the ratio of the number of watches sold by company 'S' in May to the watches sold by company 'T' in February.",
+                options: ["5:7", "6:7", "8:7", "9:7"],
+                ans: 2,
+                solution: "Calculating the monthly sales figures gives the ratio 8:7."
+            },
+            {
+                q: "According to the Economic Review of Rajasthan 2023-24, what is the net state domestic product of the state at constant (2011-12) prices?",
+                options: ["Rs 1369477 crore", "Rs 1528385 crore", "Rs 740581 crore", "Rs 845115 crore"],
+                ans: 2,
+                solution: "NSDP at constant prices was ₹7,40,581 crore."
+            },
+            {
+                q: "According to the Economic Review of Rajasthan 2023-24, what is the per capita income of the state at current prices?",
+                options: ["Rs. 165963", "Rs. 167964", "Rs. 740581", "Rs. 161864"],
+                ans: 1,
+                solution: "Per capita income at current prices stands at ₹1,67,964."
+            },
+            {
+                q: "According to the Economic Review of Rajasthan 2023-24, what was the provisional industrial production index of the state at constant prices?",
+                options: ["151.77", "150.33", "147.70", "153.77"],
+                ans: 0,
+                solution: "The provisional industrial production index was 151.77."
+            },
+            {
+                q: "According to the Economic Review of Rajasthan 2023-24, what was the percentage change in the wholesale price index of the state in the year 2023-24 as compared to the year 2022-23?",
+                options: ["0.09%", "-0.09%", "0.06%", "-0.06%"],
+                ans: 1,
+                solution: "It recorded a change of -0.09%."
+            },
+            {
+                q: "According to the Economic Survey 2023-24 of Rajasthan, what percentage increase was recorded in the general wholesale price index of the state in the year 2023 as compared to the year 2022?",
+                options: ["0.54%", "0.64%", "0.62%", "0.74%"],
+                ans: 0,
+                solution: "A percentage increase of 0.54% was recorded."
+            },
+            {
+                q: "According to the Economic Survey 2023-24, Rajasthan ranks first in the production of which crops in India?",
+                options: ["Mustard, Moong, Moth", "Isabgol, Cumin, Sorghum", "Gram, Moong, Urad", "Moong, Maize, Millet"],
+                ans: 0,
+                solution: "Rajasthan ranks first in Mustard, Moong, and Moth production."
+            },
+            {
+                q: "In Rajasthan, under the Pradhan Mantri Gram Sadak Yojana in 2022-23 ___ roads were constructed.",
+                options: ["727 km", "892 km", "301 km", "993 km"],
+                ans: 0,
+                solution: "Road length constructed was 727 km."
+            },
+            {
+                q: "Which of the following options is not true regarding 'Mukhyamantri Laghu Udyog Protsahan Yojana'?",
+                options: ["Under this scheme, a loan of up to Rs 10 crore will be made available.", "An interest subsidy of 8 percent will be given on a loan of up to Rs 25 lakh.", "An interest subsidy of 6 percent will be given on a loan of up to Rs 5 crore.", "4 percent interest subsidy will be given on loans up to Rs 10 crore."],
+                ans: 2,
+                solution: "Statement (c) is factually not true as per the scheme's subsidy breakdown slabs."
+            }
+        ]; // Array ends here
+        let currentQ = 0;
+        let qStatus = new Array(questions.length).fill('not-visited'); 
+        let userAnswers = new Array(questions.length).fill(null);
+        
+        let timeLeft = 180 * 60; // 180 minutes for RAS FLT
+        let timerInterval;
+
+        window.addEventListener('blur', function() {
+            document.getElementById('warning').style.display = 'block';
+            setTimeout(() => { document.getElementById('warning').style.display = 'none'; }, 4000);
+        });
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); return; }
+                let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
+                document.getElementById('timer').innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+                timeLeft--;
+            }, 1000);
+        }
+
+        function initPalettes() {
+            const grid = document.getElementById('palette-grid');
+            const modalGrid = document.getElementById('modal-palette-grid');
+            grid.innerHTML = ''; modalGrid.innerHTML = '';
+
+            for(let i = 0; i < questions.length; i++) {
+                let btn = document.createElement('button');
+                btn.className = 'p-btn';
+                btn.innerText = i + 1;
+                btn.id = 'pbtn-' + i;
+                btn.onclick = () => { if(qStatus[currentQ]==='not-visited') qStatus[currentQ]='not-ans'; loadQuestion(i); };
+                grid.appendChild(btn);
+
+                let mBtn = document.createElement('button');
+                mBtn.className = 'p-btn';
+                mBtn.innerText = i + 1;
+                mBtn.id = 'mpbtn-' + i;
+                mBtn.onclick = () => { closeModal(); if(qStatus[currentQ]==='not-visited') qStatus[currentQ]='not-ans'; loadQuestion(i); };
+                modalGrid.appendChild(mBtn);
+            }
+            updatePalettes();
+        }
+
+        function updatePalettes() {
+            for(let i = 0; i < questions.length; i++) {
+                let btn = document.getElementById('pbtn-' + i);
+                let mBtn = document.getElementById('mpbtn-' + i);
+                if(!btn) continue;
+
+                btn.className = 'p-btn'; mBtn.className = 'p-btn';
+                if(qStatus[i] === 'ans') {
+                    btn.classList.add('p-ans'); mBtn.classList.add('p-ans');
+                } else if(qStatus[i] === 'not-ans') {
+                    btn.classList.add('p-not-ans'); mBtn.classList.add('p-not-ans');
+                }
+            }
+        }
+
+        function loadQuestion(index) {
+            currentQ = index;
+            if(qStatus[currentQ] === 'not-visited') qStatus[currentQ] = 'not-ans'; 
+            
+            document.getElementById('q-num-display').innerText = currentQ + 1;
+            document.getElementById('q-text').innerHTML = questions[currentQ].q.replace(/\n/g, '<br>');
+            
+            let optsHtml = '';
+            let currentOpts = [...questions[currentQ].options, "Question Not Attempted"];
+            
+            currentOpts.forEach((opt, optIndex) => {
+                let isChecked = (userAnswers[currentQ] === optIndex) ? 'checked' : '';
+                let is5thOption = (optIndex === 4);
+                let optStyle = is5thOption ? 'border-color: #64748b; color: #94a3b8;' : '';
+                
+                optsHtml += `
+                <label class="option-label" style="${optStyle}">
+                    <input type="radio" name="currentOpt" value="${optIndex}" ${isChecked}>
+                    ${is5thOption ? '' : '<strong>' + String.fromCharCode(65 + optIndex) + '. </strong>'} ${opt}
+                </label>`;
+            });
+            document.getElementById('options-container').innerHTML = optsHtml;
+            updatePalettes();
+
+            if (currentQ === questions.length - 1) document.getElementById('btn-next').innerText = 'Save';
+            else document.getElementById('btn-next').innerText = 'Save & Next';
+        }
+
+        function getSelectedOption() {
+            const selected = document.querySelector('input[name="currentOpt"]:checked');
+            return selected ? parseInt(selected.value) : null;
+        }
+
+        function saveAndNext() {
+            let sel = getSelectedOption();
+            if(sel === null || sel === 4) {
+                userAnswers[currentQ] = null;
+                qStatus[currentQ] = 'not-ans';
+            } else {
+                userAnswers[currentQ] = sel;
+                qStatus[currentQ] = 'ans';
+            }
+
+            if(currentQ < questions.length - 1) {
+                loadQuestion(currentQ + 1);
+            } else {
+                updatePalettes();
+                alert("You are on the last question. Click 'FINAL SUBMIT' on the right panel when finished.");
+            }
+        }
+
+        function clearResponse() {
+            userAnswers[currentQ] = null;
+            qStatus[currentQ] = 'not-ans';
+            loadQuestion(currentQ);
+        }
+
+        function prevQuestion() {
+            if(currentQ > 0) {
+                if(qStatus[currentQ] === 'not-visited') qStatus[currentQ] = 'not-ans';
+                loadQuestion(currentQ - 1);
+            }
+        }
+
+        function openModal() { document.getElementById('jumpModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('jumpModal').style.display = 'none'; }
+
+        function submitTest() {
+            let sel = getSelectedOption();
+            if(sel !== null && sel !== 4) { userAnswers[currentQ] = sel; qStatus[currentQ] = 'ans'; }
+
+            if(!confirm("Are you sure you want to submit the test?")) return;
+            clearInterval(timerInterval);
+            
+            let correct = 0; let wrong = 0; let attempted = 0;
+            for(let i = 0; i < questions.length; i++) {
+                let ans = userAnswers[i];
+                if(ans !== null && ans !== 4) {
+                    attempted++;
+                    if(ans === questions[i].ans) correct++;
+                    else wrong++;
+                }
+            }
+
+            let score = (correct * 2) - (wrong * 0.66);
+            score = Math.max(0, score).toFixed(2);
+
+            document.getElementById('header').style.display = 'none';
+            document.getElementById('test-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+
+            document.getElementById('res-score').innerText = `${score} / 300`;
+            document.getElementById('res-attempted').innerText = attempted;
+            document.getElementById('res-correct').innerText = correct;
+            document.getElementById('res-wrong').innerText = wrong;
+
+            generateReviewSection();
+            window.scrollTo(0,0);
+        }
+
+        function generateReviewSection() {
+            let html = '<h2 style="color: var(--gold); margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom:10px;">Detailed Question Solutions</h2>';
+            
+            questions.forEach((q, i) => {
+                let uAns = userAnswers[i];
+                let cAns = q.ans;
+                
+                let statusBadge = ''; let cardBorder = '';
+                if (uAns === cAns) { statusBadge = '✅ Correct (+2)'; cardBorder = 'border-left: 5px solid #22c55e;'; }
+                else if (uAns !== null && uAns !== 4) { statusBadge = '❌ Wrong (-0.66)'; cardBorder = 'border-left: 5px solid #ef4444;'; }
+                else { statusBadge = '➖ Unattempted'; cardBorder = 'border-left: 5px solid #64748b;'; }
+
+                html += `<div class="review-card" style="${cardBorder}">`;
+                html += `<div class="review-q">Q${i+1}. ${q.q} <span style="float:right; font-size:0.85rem; font-weight:bold;">${statusBadge}</span></div>`;
+                
+                q.options.forEach((opt, optIdx) => {
+                    let optClass = 'review-opt';
+                    if (optIdx === cAns) optClass += ' opt-correct';
+                    else if (optIdx === uAns && uAns !== cAns) optClass += ' opt-wrong';
+                    
+                    let alphabet = String.fromCharCode(65 + optIdx);
+                    html += `<div class="${optClass}"><strong>${alphabet}.</strong> ${opt}</div>`;
+                });
+
+                if(q.solution) {
+                    html += `<div class="review-sol"><strong>Explanation:</strong><br>${q.solution}</div>`;
+                }
+                html += `</div>`;
+            });
+
+            document.getElementById('review-container').innerHTML = html;
+        }
+
+        initPalettes();
+        loadQuestion(0);
+        startTimer();
+    </script>
+</body>
+</html>
