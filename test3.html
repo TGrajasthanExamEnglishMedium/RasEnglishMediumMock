@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RASEnglishMdm | RAS Prelims Mock Test</title>
+<style>
+:root{--bg:#0b0f19;--panel:#151e32;--pri:#2563eb;--txt:#f8fafc;--mut:#94a3b8;--ok:#10b981;--bad:#ef4444;--warn:#f59e0b;--br:#22324e}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Segoe UI,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--panel);border-bottom:1px solid var(--br)}
+.brand{font-weight:800;color:#60a5fa;font-size:18px}
+.container{max-width:1100px;margin:auto;padding:16px}
+.panel{background:var(--panel);border:1px solid var(--br);border-radius:12px;padding:24px;box-shadow:0 8px 25px #0008}
+#test,#result,#admin{display:none}
+.form{max-width:550px;margin:25px auto}
+label{display:block;color:var(--mut);font-size:13px;font-weight:bold;margin:12px 0 6px}
+input,select{width:100%;padding:12px;background:#0a1120;color:white;border:1px solid var(--br);border-radius:8px}
+.btn{border:0;border-radius:8px;padding:11px 17px;background:var(--pri);color:white;font-weight:bold;cursor:pointer}
+.btn.red{background:var(--bad)}.btn.green{background:var(--ok)}.btn.yellow{background:var(--warn);color:#111}
+.rules{background:#2563eb12;border:1px dashed #2563eb66;padding:14px;border-radius:8px;margin:16px 0;color:#cbd5e1;font-size:13px;line-height:1.7}
+.testbody{display:flex;height:calc(100vh - 59px);overflow:hidden}
+.qcol{flex:3;padding:24px;overflow-y:auto}
+.pcol{flex:1;min-width:270px;background:#0e1526;padding:18px;overflow-y:auto;border-left:1px solid var(--br)}
+.qhead{display:flex;justify-content:space-between;border-bottom:1px solid var(--br);padding-bottom:12px;margin-bottom:20px}
+.qtext{font-size:18px;line-height:1.6;margin-bottom:20px}
+.opt{display:block;background:#111a2e;border:1px solid var(--br);padding:14px;margin:10px 0;border-radius:8px;cursor:pointer}
+.opt:hover{border-color:#3b82f6}.opt input{width:auto;margin-right:10px}
+.actions{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:25px;padding-top:15px;border-top:1px solid var(--br)}
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:14px}
+.p{height:36px;border:1px solid var(--br);background:#111a2e;color:#aaa;border-radius:6px;font-weight:bold}
+.p.active{outline:2px solid #60a5fa}.p.ans{background:var(--ok);color:white}.p.rev{background:var(--warn);color:#111}
+.timer{font-weight:800;color:#f87171;background:#ef44441a;padding:7px 12px;border-radius:7px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.card{background:#0c1424;border:1px solid var(--br);padding:16px;border-radius:8px;text-align:center}
+.num{font-size:23px;font-weight:bold;margin-top:6px}
+.review{margin-top:25px;text-align:left}.reviewItem{padding:14px;border-bottom:1px solid var(--br);line-height:1.6}
+.correct{color:var(--ok)}.wrong{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid var(--br);text-align:left}th{color:#94a3b8}
+@media(max-width:800px){.testbody{display:block;height:auto}.qcol{min-height:70vh}.pcol{border-left:0;border-top:1px solid var(--br)}.cards{grid-template-columns:repeat(2,1fr)}.qtext{font-size:16px}}
+</style>
+</head>
+<body>
+<header class="nav">
+<div class="brand">RASEnglishMdm</div>
+<div>
+<a href="https://t.me/RajasthanExamEnglishMedium" target="_blank" style="color:#60a5fa;margin-right:12px">Telegram</a>
+<button class="btn" onclick="adminLogin()">🔒 Admin</button>
+</div>
+</header>
+
+<section id="home" class="container form">
+<div class="panel">
+<h2 style="text-align:center">Rajasthan Exam Mock Test Series</h2>
+<p style="text-align:center;color:#94a3b8;margin-top:5px">RAS Prelims • Rajasthan GK • Current Affairs • General Studies</p>
+<div class="rules">
+<b>Test Pattern</b>
+<ul style="padding-left:20px">
+<li>Total Questions: <b>150 MCQs</b></li>
+<li>Duration: <b>180 Minutes</b></li>
+<li>Correct: <b>+2 Marks</b></li>
+<li>Wrong: <b>-0.66 Marks</b></li>
+<li>Unattempted: <b>0 Marks</b></li>
+<li>Timer reaches 00:00 → test automatically submits.</li>
+<li>Answers and explanations are shown only after submission.</li>
+</ul>
+</div>
+<form id="reg">
+<label>Full Name *</label><input id="name" required>
+<label>Email ID *</label><input id="email" type="email" required>
+<label>Which Exam Preparing For *</label>
+<select id="exam" required>
+<option value="">Select Exam</option>
+<option>RAS Prelims</option><option>RAS & Other Rajasthan Exams</option>
+<option>Rajasthan SI</option><option>CET Graduation Level</option><option>Other Rajasthan Exams</option>
+</select>
+<label>Telegram ID</label><input id="tg" placeholder="@username">
+<label>District *</label><input id="district" required placeholder="e.g. Jaipur">
+<button class="btn" style="width:100%;margin-top:18px">Start Test</button>
+</form>
+</div>
+</section>
+
+<section id="test">
+<div class="nav">
+<b>RAS PRELIMS MOCK TEST</b><div class="timer" id="timer">180:00</div>
+<button class="btn red" onclick="submitConfirm()">Submit Test</button>
+</div>
+<div class="testbody">
+<div class="qcol">
+<div class="qhead"><b>Question <span id="qn">1</span> of 150</b><span>+2 / -0.66</span></div>
+<div class="qtext" id="qt"></div><div id="opts"></div>
+<div class="actions">
+<div><button class="btn" onclick="prev()">Previous</button><button class="btn" onclick="clearAns()">Clear</button></div>
+<div><button class="btn yellow" onclick="review()">Review</button><button class="btn" onclick="next()">Save & Next</button></div>
+</div>
+</div>
+<div class="pcol"><b>Question Palette</b>
+<p style="color:#94a3b8;font-size:12px;margin-top:8px">🟢 Answered &nbsp; 🟡 Review &nbsp; ⚪ Not Answered</p>
+<div class="palette" id="palette"></div></div>
+</div>
+</section>
+
+<section id="result" class="container"><div class="panel">
+<h2 style="text-align:center;color:#10b981">Test Submitted Successfully!</h2>
+<p style="text-align:center;color:#94a3b8;margin-top:5px">RAS Prelims Performance Report</p>
+<div class="cards">
+<div class="card">Score<div class="num" id="score">0</div></div>
+<div class="card">Rank<div class="num" id="rank">#1</div></div>
+<div class="card">Accuracy<div class="num" id="accuracy">0%</div></div>
+<div class="card">Time<div class="num" id="time">0m</div></div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:15px;background:#0c1424;border-radius:8px">
+<span class="correct">Correct: <b id="correct">0</b></span><span class="wrong">Wrong: <b id="wrong">0</b></span><span>Unattempted: <b id="unattempted">150</b></span>
+</div>
+<div class="review" id="reviewBox"></div><br><button class="btn" onclick="location.reload()">Back to Home</button>
+</div></section>
+
+<section id="admin" class="container"><div class="panel">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><h2>Admin Control Center</h2><button class="btn red" onclick="location.reload()">Exit</button></div>
+<div class="cards">
+<div class="card">Registrations<div class="num" id="ac">0</div></div><div class="card">Highest Score<div class="num" id="hs">0</div></div><div class="card">Average Score<div class="num" id="av">0</div></div>
+</div>
+<button class="btn green" onclick="csv()">Export CSV</button>
+<div style="overflow:auto;margin-top:15px"><table><thead><tr><th>Rank</th><th>Name</th><th>Exam</th><th>District</th><th>Telegram</th><th>Email</th><th>Score</th><th>Accuracy</th><th>Time</th><th>C/W/U</th></tr></thead><tbody id="atable"></tbody></table></div>
+</div></section>
+
+<script>
+const Q=[
+{id:1,q:"Rajasthan GSDP in 2023-24 at current prices was approximately what percentage of India's GDP?",o:["4.17%","5.17%","6.17%","7.17%"],a:2,e:"Rajasthan's GSDP was about 5.17% of India's GDP at current prices."},
+{id:2,q:"A person passed an examination four times as often as he failed. If the ratio is modified to 2:1, what is the total number of attempts?",o:["105","125","155","175"],a:3,e:"Using the given modified ratio and the original condition, the total is 155."},
+{id:3,q:"A invested ₹54,000. B joined after 4 months and C after 6 months. Their profit ratio was 1:4:5. What was the combined capital of B and C?",o:["₹7,20,000","₹8,40,000","₹8,64,000","₹9,60,000"],a:3,e:"Applying capital × time in the partnership ratio gives the combined B and C capital as ₹8,64,000."},
+{id:4,q:"₹36,000 is divided between A and B. A is invested for 2 years and B for 4 years at 15% simple interest. If their interests are equal, what is the interest on A's share?",o:["₹7,200","₹8,100","₹9,000","₹10,800"],a:1,e:"Equal interest gives A's share ₹24,000. SI = 24000×15×2/100 = ₹7,200."},
+{id:5,q:"A bag contains 20 green and 15 red balls. What is the probability of drawing a green ball?",o:["3/7","5/7","2/5","4/7"],a:4,e:"Total balls = 35. Probability = 20/35 = 4/7."},
+{id:6,q:"Consider the statements about energy flow in a food chain: (1) energy is transferred without loss, (2) about 10% energy is transferred to the next trophic level. Which is correct?",o:["Only 1","Only 2","Both are correct","Both are wrong"],a:4,e:"Energy transfer is not 100% efficient. The 10% law describes approximate energy transfer between trophic levels."},
+{id:7,q:"A person is standing in front of a plane mirror. If the object raises its right hand, which hand appears raised in the mirror image?",o:["Right hand","Left hand","Both hands","Neither hand"],a:2,e:"A plane mirror causes lateral inversion, so the right side appears as the left side."},
+{id:8,q:"A production-sales data set gives total sales of 2391 units and total production of 3048 units. What percentage of production was sold?",o:["76.44%","77.44%","78.44%","79.44%"],a:3,e:"Percentage = 2391/3048 × 100 ≈ 78.44%."},
+{id:9,q:"A person can be both a teacher and a player. A professor is a type of teacher. Which Venn relationship is logically possible?",o:["Professor inside Teacher, with Player overlapping Teacher","All three completely separate","Player inside Professor only","Teacher inside Player only"],a:1,e:"Professors form a subset of teachers, while players can overlap with teachers."},
+{id:10,q:"According to the given year-wise revenue data, in which year was the increase over the previous year less than 6%?",o:["2013","2014","2015","2016"],a:3,e:"The calculated year-on-year increase below 6% corresponds to 2015."},
+{id:11,q:"Which Ayurveda-related pair is mismatched?",o:["Ayurveda University–Jodhpur","Panchakarma Center–80","National Ayurveda Institute–Jaipur","Ayurveda Hospital–Jaipur"],a:2,e:"The supplied data identifies the Panchakarma Center figure as the mismatched pair; the correct figure is 82."},
+{id:12,q:"Rajasthan Government Health Scheme (RGHS) was launched on which date?",o:["1 July 2021","1 January 2021","15 August 2021","26 January 2022"],a:1,e:"RGHS was launched on 1 July 2021."},
+{id:13,q:"The Pre-Clinical Network Facility was inaugurated at which place?",o:["Jaipur","Kota","Faridabad","Jodhpur"],a:3,e:"The facility was inaugurated at Faridabad."},
+{id:14,q:"Rashtriya Bal Swasthya Karyakram (RBSK) screening covers how many identified health conditions?",o:["20","40","50","60"],a:2,e:"RBSK focuses on screening for 4Ds covering 40 identified health conditions."},
+{id:15,q:"Ocean Drill 2024 was the largest naval exercise of which country?",o:["India","Russia","USA","France"],a:2,e:"Ocean Drill 2024 was described as Russia's largest naval exercise."},
+{id:16,q:"What was the motto of the Paris Paralympics 2024?",o:["Games for All","United by Sport","Games Wide Open","Sport Without Limits"],a:3,e:"The official motto was 'Games Wide Open'."},
+{id:17,q:"After four CPSEs received Navratna status in August 2024, the total number of Navratna CPSEs became:",o:["21","23","24","25"],a:4,e:"The total number became 25 Navratna CPSEs."},
+{id:18,q:"Dungarpur has the highest rural population proportion and Kota the highest urban proportion. The statement that Jaisalmer has the lowest density at 17 is:",o:["Both statements correct","First correct, second wrong","Both statements wrong","First wrong, second correct"],a:3,e:"According to the supplied question data, both the assertion and reason were treated as incorrect."},
+{id:19,q:"Which statements about RHUMI-1 are correct? 1. It is a reusable hybrid rocket system. 2. It uses a hybrid propulsion concept. 3. It is a conventional aircraft. 4. It represents a private Indian space initiative.",o:["1 and 2 only","1,2 and 3","1,2 and 4","All four"],a:3,e:"Statements 1, 2 and 4 are correct."},
+{id:20,q:"Under PMAY-U 2.0, the annual income range for the LIG category is:",o:["₹1–3 lakh","₹3–6 lakh","₹6–9 lakh","₹9–12 lakh"],a:2,e:"LIG is defined in the ₹3–6 lakh annual income range."},
+{id:21,q:"EOS-08 along with SR-0 was launched on:",o:["16 August 2024","15 August 2024","26 August 2024","1 September 2024"],a:1,e:"The launch took place on 16 August 2024."},
+{id:22,q:"India's first indigenously developed monkeypox RT-PCR diagnostic kit was developed by:",o:["DRDO","ICMR","AMTZ","CSIR"],a:3,e:"The indigenous monkeypox RT-PCR kit was developed by AMTZ."},
+{id:23,q:"Which policy aims to increase Rajasthan's exports?",o:["Industrial Policy","Export Promotion Policy","Tourism Policy","MSME Policy"],a:2,e:"The Export Promotion Policy is aimed at increasing exports."},
+{id:24,q:"Rajasthan's renewable energy capacity target by 2031-32 is:",o:["23,600 MW","33,600 MW","43,600 MW","53,600 MW"],a:2,e:"The target mentioned is 33,600 MW."},
+{id:25,q:"Which places received new trauma centres under Rajasthan Budget 2024-25?",o:["Jaipur, Kolana, Dausa, Sanderao, Pali and Pratapgarh","Jaipur, Kota, Ajmer and Udaipur","Jodhpur, Barmer and Bikaner only","Alwar, Bharatpur and Dholpur only"],a:1,e:"The budget proposal covered Jaipur, Kolana, Dausa, Sanderao, Pali and Pratapgarh."},
+{id:26,q:"What was proposed at every divisional headquarters for road safety under the 2024 Budget?",o:["Road Safety Campaign","Road Safety Task Force","Traffic Police Academy","Highway Safety Board"],a:1,e:"The supplied answer identifies Road Safety Campaign."},
+{id:27,q:"The main objective of Farmer Producer Organisations (FPOs) is:",o:["Individual farming","Collective marketing","Land acquisition","Crop insurance"],a:2,e:"FPOs strengthen farmers through collective production, aggregation and marketing."},
+{id:28,q:"Which statements about balcony solar panels in Jaipur are correct? 1. A 1 kW system can generate about 100 units/month. 2. A 2 kW system can generate about 200 units/month.",o:["Only 1","Only 2","Both 1 and 2","Neither"],a:3,e:"The supplied data marks both statements as correct under the stated approximate generation."},
+{id:29,q:"The Shompen tribe, among India's tribal communities, is associated with:",o:["Lakshadweep","Andaman and Nicobar Islands","Arunachal Pradesh","Odisha"],a:2,e:"The Shompen tribe is indigenous to Great Nicobar in the Andaman and Nicobar Islands."},
+{id:30,q:"India's largest climate clock on Earth Day was installed in:",o:["Mumbai","New Delhi","Jaipur","Bengaluru"],a:2,e:"The climate clock was installed in New Delhi."},
+{id:31,q:"The Malaria Crush programme aims at malaria elimination by:",o:["2027","2030","2035","2040"],a:2,e:"The target year mentioned is 2030."},
+{id:32,q:"According to Nutrition Tracker data, which district had the highest number of malnourished children?",o:["Jaipur","Kota","Barmer","Udaipur"],a:4,e:"The supplied data identifies Udaipur."},
+{id:33,q:"Devanshi Katara and Rudraksh Khandelwal are associated with which sport?",o:["Archery","Badminton","Shooting","Wrestling"],a:3,e:"Both are associated with shooting."},
+{id:34,q:"Jawahar Kala Kendra was established in:",o:["1985","1990","1993","1998"],a:3,e:"Jawahar Kala Kendra was established in 1993."},
+{id:35,q:"A major advantage of a parliamentary form of government is:",o:["No legislative control","Executive accountability to legislature","President has unlimited power","Judiciary controls the cabinet"],a:2,e:"The executive remains accountable to and can be questioned by the legislature."},
+{id:36,q:"Which statement about India's sovereignty and Commonwealth membership is correct?",o:["Only the first statement is correct","Only the second statement is correct","Both are correct","Both are wrong"],a:1,e:"The supplied answer identifies only statement 1 as correct."},
+{id:37,q:"How many types of justice are mentioned in the Preamble?",o:["Two","Three","Four","Five"],a:2,e:"The Preamble mentions social, economic and political justice."},
+{id:38,q:"Protection against untouchability is provided under:",o:["Right to Freedom","Right to Equality","Right against Exploitation","Cultural Rights"],a:2,e:"Article 17 abolishes untouchability under the Right to Equality."},
+{id:39,q:"The Supreme Court's power to issue writs for enforcement of Fundamental Rights is under:",o:["Article 21","Article 32","Article 136","Article 226"],a:2,e:"Article 32 empowers the Supreme Court to issue writs for Fundamental Rights."},
+{id:40,q:"Which Article of the Constitution relates to promotion of international peace and security?",o:["Article 44","Article 48","Article 50","Article 51"],a:4,e:"Article 51 deals with promotion of international peace and security."},
+{id:41,q:"Which qualification is required to become President of India?",o:["Minimum age 25","Minimum age 30","Minimum age 35","Minimum age 40"],a:3,e:"A presidential candidate must be at least 35 years old."},
+{id:42,q:"Regarding Union Ministers, which statement is correct concerning the 15% limit of the Lok Sabha strength?",o:["Only statement 1","Only statement 2","Both","Neither"],a:2,e:"The supplied answer identifies only statement 2 as correct."},
+{id:43,q:"Who can participate in Lok Sabha proceedings even if they are a Rajya Sabha member?",o:["Any Rajya Sabha member","Governor","A Union Minister who is a Rajya Sabha member","Chief Justice"],a:3,e:"A minister may participate in proceedings of either House even if elected to the other House."},
+{id:44,q:"Which statement about Lok Sabha elections is incorrect?",o:["India has universal adult franchise","Election Commission supervises elections","Voter lists are prepared under the President","Members are directly elected"],a:3,e:"Electoral rolls are prepared under the Election Commission, not the President."},
+{id:45,q:"A demand reduced to one rupee in legislative procedure is called:",o:["Token cut","Policy cut","Economy cut","Symbolic cut"],a:4,e:"The supplied answer identifies it as a symbolic cut."},
+{id:46,q:"The Supreme Court's jurisdiction over disputes between the Union and States is:",o:["Appellate jurisdiction","Advisory jurisdiction","Writ jurisdiction","Original jurisdiction"],a:4,e:"Such federal disputes fall under the Supreme Court's original jurisdiction."},
+{id:47,q:"The Supreme Court's power to review its own judgments is provided under:",o:["Article 137","Article 141","Article 143","Article 145"],a:1,e:"Article 137 provides the Supreme Court power of review."},
+{id:48,q:"Transfer of a High Court judge from one High Court to another is dealt with under:",o:["Article 222","Article 217","Article 226","Article 124"],a:1,e:"Article 222 deals with transfer of High Court judges."},
+{id:49,q:"A member of a State Public Service Commission can be removed by the President after investigation by:",o:["Parliament","Governor","Supreme Court","High Court"],a:3,e:"The President may remove a State PSC member on grounds requiring Supreme Court inquiry."},
+{id:50,q:"Sthanakvasi is a sect of:",o:["Buddhism","Jainism","Sikhism","Hinduism"],a:2,e:"Sthanakvasi is a sect within Jainism."},
+{id:51,q:"Match the ancient sites with rivers: Harappa, Hastinapur, Nagarjunakonda, Paithan.",o:["2,3,4,1","1,2,3,4","4,3,2,1","3,1,4,2"],a:1,e:"Harappa–Ravi, Hastinapur–Ganga, Nagarjunakonda–Krishna, Paithan–Godavari."},
+{id:52,q:"The first recorded epigraphic evidence of Sati is associated with:",o:["Eran","Sanchi","Nalanda","Taxila"],a:1,e:"The Eran inscription provides early recorded evidence of Sati."},
+{id:53,q:"Vishadatta, Varahamihira, Charaka and Brahmagupta are associated respectively with:",o:["Drama, Astronomy, Medicine, Mathematics","Medicine, Drama, Mathematics, Astronomy","Astronomy, Medicine, Drama, Mathematics","Drama, Medicine, Astronomy, Mathematics"],a:1,e:"The correct sequence is Drama, Astronomy, Medicine and Mathematics."},
+{id:54,q:"Who was given the title 'Zari Kalam' by Akbar?",o:["Mohammad Hussain","Abdul Samad","Daswanth","Basawan"],a:1,e:"The supplied answer identifies Mohammad Hussain."},
+{id:55,q:"Arrange chronologically: Tughlaqabad, Lodhi Garden, Qutub Minar, Fatehpur Sikri.",o:["1,2,3,4","3,1,2,4","2,1,3,4","4,3,2,1"],a:2,e:"The chronological order is Qutub Minar, Tughlaqabad, Lodhi Garden, Fatehpur Sikri."},
+{id:56,q:"The universities of Calcutta, Madras and Bombay were established in:",o:["1857","1861","1882","1905"],a:1,e:"All three universities were established in 1857."},
+{id:57,q:"According to the supplied study data, Dar-ul-Uloom was established by:",o:["Maulana Shibli Numani","Sir Syed Ahmad Khan","Deoband scholars","Maulana Azad"],a:1,e:"The supplied answer identifies Maulana Shibli Numani."},
+{id:58,q:"Match: Chittagong, Kakori, Lahore, Gadar with Surya Sen, Ramprasad Bismil, Jatin Das, Lala Hardayal.",o:["1,2,3,4","2,1,4,3","4,2,3,1","3,4,1,2"],a:2,e:"Chittagong–Surya Sen, Kakori–Ramprasad Bismil, Lahore–Jatin Das, Gadar–Lala Hardayal."},
+{id:59,q:"The parallel freedom movement in princely states was known as:",o:["Swadeshi Movement","Praja Mandal Movement","Home Rule Movement","Khilafat Movement"],a:2,e:"Praja Mandals mobilised people in princely states."},
+{id:60,q:"Godavari, Mahanadi, Damodar and Kaveri are associated respectively with tributaries:",o:["Penganga, Shivnath, Barakar, Bhavani","Bhavani, Barakar, Penganga, Shivnath","Shivnath, Penganga, Bhavani, Barakar","Barakar, Bhavani, Shivnath, Penganga"],a:1,e:"The correct matching is Godavari–Penganga, Mahanadi–Shivnath, Damodar–Barakar, Kaveri–Bhavani."},
+{id:61,q:"Bangkok, Phnom Penh, Hanoi and Yangon are associated respectively with:",o:["Chao Phraya, Mekong, Red River, Irrawaddy","Mekong, Red River, Irrawaddy, Chao Phraya","Red River, Mekong, Chao Phraya, Irrawaddy","Irrawaddy, Chao Phraya, Mekong, Red River"],a:1,e:"The cities lie on/are associated with Chao Phraya, Mekong, Red River and Irrawaddy respectively."},
+{id:62,q:"The Kalahari Desert mainly extends across:",o:["Botswana and Namibia","India and Pakistan","Egypt and Sudan","Peru and Chile"],a:1,e:"The Kalahari is mainly in Botswana and Namibia, with parts extending into South Africa."},
+{id:63,q:"Which is NOT a form of nomadic agriculture?",o:["Shifting cultivation","Pastoral nomadism","Nomadic herding","Fazenda"],a:4,e:"Fazenda is a large plantation/estate system, not nomadic agriculture."},
+{id:64,q:"Hamilton, Birmingham, Essen and Anshan are major industrial centres of:",o:["USA, France, Italy, Japan","Canada, UK, Germany, China","UK, Canada, China, Germany","Germany, UK, Canada, China"],a:2,e:"The matching is Hamilton–Canada, Birmingham–UK, Essen–Germany, Anshan–China."},
+{id:65,q:"The most populated island in India is:",o:["Majuli","Diu","Port Blair Island","Salsette"],a:4,e:"Salsette Island has the highest population among Indian islands."},
+{id:66,q:"Consider statements about Devprayag, Rudraprayag, Alaknanda and Kedarnath. Which are correct?",o:["1,2 and 3 only","1 and 2 only","2 and 4 only","All four"],a:1,e:"The supplied answer identifies statements 1, 2 and 3 as correct."},
+{id:67,q:"From south to north, monsoon duration decreases; rainfall in the northern plains generally decreases from east to west. These statements are:",o:["Both correct","Only first correct","Only second correct","Both wrong"],a:1,e:"Both geographical statements are correct."},
+{id:68,q:"According to the supplied question data, Aman rice is grown mainly during:",o:["January-February","March-April","November-December","July-August"],a:3,e:"The supplied answer is November-December."},
+{id:69,q:"Which is NOT a coffee-growing area of Karnataka?",o:["Kodagu","Chikkamagaluru","Hassan","Pulanage"],a:4,e:"Pulanage is identified in the supplied data as the exception."},
+{id:70,q:"The main objective of Bharatmala Pariyojana is:",o:["Improving road connectivity","Building airports","Increasing railways","Developing ports only"],a:1,e:"Bharatmala focuses on improving road connectivity and corridor efficiency."},
+{id:71,q:"Which statement about iron ore reserves is incorrect?",o:["India has major iron ore resources","Odisha is an important producer","80% of reserves are in Jharkhand and Odisha","Iron ore is an important raw material for steel"],a:3,e:"The supplied data marks the 80% statement as incorrect."},
+{id:72,q:"Haldia, Jamnagar, Kochi and Numaligarh refineries are located respectively in:",o:["West Bengal, Gujarat, Kerala, Assam","Gujarat, West Bengal, Assam, Kerala","Kerala, Gujarat, West Bengal, Assam","Assam, Kerala, Gujarat, West Bengal"],a:1,e:"The correct state sequence is West Bengal, Gujarat, Kerala and Assam."},
+{id:73,q:"Vyommitra was developed by:",o:["DRDO","ISRO","HAL","BHEL"],a:2,e:"Vyommitra is an ISRO-developed humanoid robot for space missions."},
+{id:74,q:"Which measure aims at reducing inequality by providing subsidised food grains?",o:["PDS","GST","FDI","Repo Rate"],a:1,e:"The Public Distribution System supports vulnerable households through subsidised food."},
+{id:75,q:"Which pair is synonymous with Action-Reaction?",o:["Demand-Supply","Cause-Effect","Attack-Defense","Input-Output"],a:3,e:"The supplied answer uses Attack-Defense as the analogous pair."},
+{id:76,q:"Regarding Aurangzeb, Rana Raj Singh, Vijay Singh, Mominabad and Jai Singh, which statement is wrong?",o:["Statement 1","Statement 2","Statement 3","None of these"],a:4,e:"According to the supplied data, none of the listed statements was treated as wrong."},
+{id:77,q:"Match havelis with districts: Tarachand Ruia, Bachhawats, Salim Singh, Bagadiyan.",o:["Sikar, Bikaner, Jaisalmer, Jhunjhunu","Bikaner, Sikar, Jaisalmer, Jhunjhunu","Sikar, Jaisalmer, Bikaner, Jhunjhunu","Jhunjhunu, Bikaner, Sikar, Jaisalmer"],a:1,e:"The supplied matching is Tarachand Ruia–Sikar, Bachhawats–Bikaner, Salim Singh–Jaisalmer, Bagadiyan–Jhunjhunu."},
+{id:78,q:"Which statements about Aai Mata, Basyoda and Tanot Mata are correct?",o:["Only 1","Only 2","Only 1 and 3","All three"],a:3,e:"The supplied answer identifies statements 1 and 3 as correct."},
+{id:79,q:"Descriptions of Pabuji and Tejaji as sword/spear horse riders are interchanged. What is the correct conclusion?",o:["Both descriptions correct","Only Pabuji correct","Both descriptions wrong/interchanged","Only Tejaji correct"],a:3,e:"The supplied answer states that both descriptions are wrong/interchanged."},
+{id:80,q:"Arrange establishment years: Rajasthan Seva Sangh, Marwar Hitkarini Sabha, All India Native State Council, Narendra Mandal.",o:["1919,1927,1923,1921","1921,1919,1927,1923","1927,1923,1919,1921","1919,1923,1921,1927"],a:1,e:"The sequence in the supplied data is 1919, 1927, 1923 and 1921."},
+{id:81,q:"Which pair is incorrectly matched?",o:["Algoza–Wind instrument","Ravanhatha–String instrument","Shankh–String instrument","Morchang–Percussion instrument"],a:3,e:"Shankh is a wind instrument, not a string instrument."},
+{id:82,q:"Which statements about Nagari, Baror, Naliasar and Jodhpura archaeological sites are correct?",o:["Only 1","Only 2","1 and 2 only","All are correct"],a:4,e:"According to the supplied data, all listed statements are correct."},
+{id:83,q:"Who renounced the title Rai Bahadur and was associated with Nagpur 1920, Wardha 1921 and the Harijan cause?",o:["Jamnalal Bajaj","G.D. Birla","Madan Mohan Malaviya","C. Rajagopalachari"],a:1,e:"Jamnalal Bajaj was a close associate of Gandhi and worked extensively for the freedom and Harijan movements."},
+{id:84,q:"Which statement about Manganiyar musician Lakha Khan is false?",o:["He is a Manganiyar musician","He is known for folk music","He has performed internationally","He is a resident of Raneri, Jaisalmer"],a:4,e:"The supplied data marks the Raneri, Jaisalmer residence as false; he is associated with Jodhpur."},
+{id:85,q:"Terminator Seed Technology is designed to:",o:["Increase seed size","Produce sexually sterile plants","Improve irrigation","Create organic manure"],a:2,e:"The technology refers to seeds genetically designed to produce sterile plants in subsequent generations."},
+{id:86,q:"Recombinant DNA technology was used in production of interferon, which has applications particularly in:",o:["Cancer treatment","Soil conservation","Irrigation","Road construction"],a:1,e:"Recombinant interferon has important medical applications including cancer and antiviral therapy."},
+{id:87,q:"A nano-plug is associated with:",o:["Large telescope","Small hearing aid","Water purifier","Solar panel"],a:2,e:"The supplied answer identifies nano-plug with a small hearing-aid application."},
+{id:88,q:"A quantum dot is a:",o:["Biological cell","Large crystal","Metal alloy","Semiconductor nanostructure"],a:4,e:"Quantum dots are nanoscale semiconductor structures with quantum-confined properties."},
+{id:89,q:"According to the supplied question, the smallest/fastest computer for certain advanced brain-functioning computations is:",o:["Supercomputer","Quantum computer","Mainframe","Microcomputer"],a:2,e:"The supplied answer identifies the quantum computer."},
+{id:90,q:"Which folk-song pair is incorrectly matched?",o:["Jala Geet–Rain","Panihari–Water","Kurjan–Separation","Kesariya–Folk song"],a:1,e:"The supplied data identifies the Jala Geet timing/association as the incorrect pair."},
+{id:91,q:"Match communities with dances: Garasia, Gurjar, Bhil, Sahariya.",o:["4,3,1,2","1,2,3,4","2,4,3,1","3,1,4,2"],a:1,e:"The supplied matching is Garasia–Mandal, Gurjar–Chari, Bhil–Gavari and Sahariya–Sang."},
+{id:92,q:"Which statement about the Ahirwati dialect is incorrect?",o:["It is spoken in parts of north-eastern Rajasthan","It has influence from neighbouring areas","It has local literary traditions","Works of Dayabai, Sahajobai and Charandas are all Ahirwati works"],a:4,e:"The supplied data identifies the fourth statement as incorrect."},
+{id:93,q:"Which statements about the Global Happiness Index 2024 are correct?",o:["Only 1","Only 2 and 3","Only 1 and 3","All three"],a:2,e:"The supplied answer identifies statements 2 and 3 as correct; Finland ranked first."},
+{id:94,q:"The main objective of PM MUDRA Yojana is to:",o:["Fund large industries","Bring small entrepreneurs into the formal financial system","Build highways","Provide pensions"],a:2,e:"MUDRA provides institutional credit to micro and small entrepreneurs."},
+{id:95,q:"Which statement about Wholesale Price Index is correct?",o:["Only statement 1","Only statement 2","Both","Neither"],a:1,e:"According to the supplied data, only statement 1 is correct."},
+{id:96,q:"Regarding revenue expenditure, which conclusion is correct?",o:["Both statements are correct","Only first","Only second","Both wrong"],a:1,e:"The supplied answer identifies both statements as correct."},
+{id:97,q:"Under the Banking Ombudsman framework, the Ombudsman is:",o:["A bank employee elected by customers","A senior officer appointed by RBI","A Supreme Court judge","A Finance Ministry secretary"],a:2,e:"The supplied answer identifies a senior RBI-appointed officer."},
+{id:98,q:"Which body historically recommended/selects chairpersons of public sector banks?",o:["SEBI","Bank Board Bureau","NITI Aayog","Finance Commission"],a:2,e:"The Bank Board Bureau was created to advise on appointments in public sector banks."},
+{id:99,q:"Which statements are correct? 1. NNP reflects national income. 2. NSO measures national income.",o:["Only 1","Only 2","Both 1 and 2","Neither"],a:3,e:"Both statements are correct in the supplied context."},
+{id:100,q:"SEBI was established as a statutory body in:",o:["1988","1990","1992","1995"],a:3,e:"SEBI received statutory status in 1992."},
+{id:101,q:"Which statements about Rajasthan's population density are correct? 1. Rajasthan density is 200 persons/sq km. 2. India's density is 382 persons/sq km.",o:["Only 1","Only 1 and 2","Only 2","Neither"],a:2,e:"The supplied data identifies both figures as correct."},
+{id:102,q:"Biogas mainly contains:",o:["Methane, CO2 and hydrogen","Ozone, nitrogen and oxygen","Only methane","Only carbon dioxide"],a:1,e:"Biogas mainly consists of methane and carbon dioxide, with smaller quantities of other gases."},
+{id:103,q:"Which Rajasthan ecosystem matching statements are incorrect?",o:["Only 1 and 2","Only 3","1,2 and 3","None"],a:1,e:"The supplied answer identifies only statements 1 and 2 as incorrect."},
+{id:104,q:"Which statements about maize as a major crop in agro-climatic regions are correct?",o:["Only 1 and 2","Only 1","Only 2","Both are wrong"],a:1,e:"The supplied answer identifies statements 1 and 2 as correct."},
+{id:105,q:"Regarding Pachpadra Lake, which statement is correct according to the supplied data?",o:["It is entirely freshwater","It is associated with the Restan saline region","It is in Kota","It is a Himalayan lake"],a:2,e:"The supplied answer identifies the Restan association as correct."},
+{id:106,q:"Match Rajasthan lift canals with beneficiary districts according to the supplied data.",o:["3,4,1,2","1,2,3,4","2,3,4,1","4,1,2,3"],a:1,e:"The supplied sequence is 3,4,1,2 for the four canal-project mappings."},
+{id:107,q:"Regarding Koppen climate classification and BShw climate, which conclusion is correct?",o:["Both statements correct and reason explains it","Only assertion correct","Only reason correct","Both wrong"],a:1,e:"Both statements are correct and the reason explains the classification."},
+{id:108,q:"The term 'Golden Drops' in the supplied geography question is associated with disturbance in:",o:["Mediterranean Sea","Black Sea","Red Sea","Arabian Sea"],a:1,e:"The supplied answer identifies the Mediterranean Sea."},
+{id:109,q:"Regarding soil statements, which is incorrect?",o:["Statement 1","Statement 2","Both","Neither"],a:2,e:"The supplied answer identifies statement 2 as incorrect."},
+{id:110,q:"Which is the correct descending sequence of forest types?",o:["Tropical Dhok, Tropical Dry Monsoon, Tropical Teak, Subtropical Evergreen","Subtropical Evergreen, Teak, Dhok, Dry Monsoon","Teak, Dhok, Evergreen, Dry Monsoon","Dhok, Teak, Evergreen, Dry Monsoon"],a:1,e:"The supplied answer gives Tropical Dhok, Tropical Dry Monsoon, Tropical Teak and Subtropical Evergreen."},
+{id:111,q:"Which hill-shape/district pair is incorrect?",o:["Girva–Udaipur","Saucer–Rajsamand","Magra–Ajmer","Hilly tract–Alwar"],a:2,e:"The supplied data marks Saucer–Rajsamand as incorrect; the relevant Saucer/Girwa association is with Udaipur."},
+{id:112,q:"The oath of office of a Governor is prescribed under:",o:["Article 156","Article 157","Article 159","Article 161"],a:3,e:"Article 159 prescribes the Governor's oath or affirmation."},
+{id:113,q:"A person who is not a member of the State Legislature can remain a minister for a maximum of:",o:["Three months","Six months","One year","Two years"],a:2,e:"A non-legislator minister must become a member within six months."},
+{id:114,q:"Which Rajasthan districts have the least number of Assembly seats?",o:["Ajmer and Bundi","Dausa and Jaisalmer","Pratapgarh and Jaisalmer","Baran and Jalore"],a:3,e:"Pratapgarh and Jaisalmer have two Assembly constituencies each."},
+{id:115,q:"Who served as the longest-serving first judge/Chief Justice figure associated with the Rajasthan High Court according to the supplied data?",o:["Kailash Nath Wanchoo","K.S. Hegde","M.C. Chagla","H.R. Khanna"],a:1,e:"The supplied answer identifies Justice Kailash Nath Wanchoo."},
+{id:116,q:"The resignation of a Sarpanch, Deputy Sarpanch or Ward Panch is addressed to:",o:["District Collector","Development Officer","Governor","Tehsildar"],a:2,e:"The supplied answer identifies the Development Officer."},
+{id:117,q:"The committee for appointment of the Rajasthan Human Rights Commission members is chaired by:",o:["Governor","Chief Minister","Chief Justice","Home Minister"],a:2,e:"The appointment committee is chaired by the Chief Minister."},
+{id:118,q:"Which former women members of RPSC were also associated with UPSC according to the supplied data?",o:["Only 1","Only 1 and 3","Only 2","All three"],a:2,e:"The supplied answer identifies persons 1 and 3."},
+{id:119,q:"Rajasthan Sampark is mainly associated with:",o:["Recruitment","Grievance redressal","Tourism","Tax collection"],a:2,e:"Rajasthan Sampark is a grievance-redressal platform."},
+{id:120,q:"Which statement about Lokayukta recommendations is incorrect?",o:["Lokayukta investigates complaints","It deals with corruption-related complaints","It can make recommendations","Its recommendations are binding on the government"],a:4,e:"The supplied answer identifies the binding-nature statement as incorrect."},
+{id:121,q:"If Hb level is 11.0 in Mamta and 8.5 in Neeraj, who is more likely to be anaemic according to the given comparison?",o:["Mamta","Neeraj","Both normal","Cannot determine"],a:2,e:"The supplied comparison identifies Neeraj's lower haemoglobin as indicating anaemia."},
+{id:122,q:"According to the supplied question data, which substance was identified as commonly used to control addiction?",o:["Ascorbic acid","Glucose","Calcium carbonate","Sodium chloride"],a:1,e:"The supplied answer is Ascorbic acid."},
+{id:123,q:"Preservatives prevent the growth of microorganisms in food, and this explains their use. The statements are:",o:["Both correct and reason explains","Only first correct","Only second correct","Both wrong"],a:1,e:"Both statements are treated as correct in the supplied data."},
+{id:124,q:"The world's first 3D-printed rocket launched from Sriharikota was:",o:["Agnikul Cosmos rocket","Agnibaan","PSLV","SSLV"],a:2,e:"The supplied answer identifies Agnibaan."},
+{id:125,q:"Farmers face problems when there is no rain in the required month. Which assumptions are valid? 1. Timely rainfall is necessary for farming. 2. Farmers depend on rainfall.",o:["Only 1","Only 2","Both 1 and 2","Neither"],a:3,e:"Both assumptions logically follow from the statement."},
+{id:126,q:"A and B share characteristics X and Y; A has Z, and B is known to have one characteristic of Z. This is an example of:",o:["Deduction","Induction","Argument from analogy","Contradiction"],a:3,e:"The supplied answer identifies an argument from analogy."},
+{id:127,q:"Which pair of statements is logically equivalent according to the supplied question?",o:["1 and 2","1 and 3","2 and 4","3 and 4"],a:3,e:"Statements 2 and 4 are logically equivalent in the supplied data."},
+{id:128,q:"A library faces frustration due to poor manual systems. Which actions should follow? 1. Computerize the library. 2. Train staff.",o:["Only 1","Only 2","Neither","Both 1 and 2"],a:4,e:"Both computerization and staff training directly address the stated problem."},
+{id:129,q:"Anurag has six years' experience, DOB 05-04-1992, 62% marks and a commerce graduation score of 76%. Under the stated special condition, should he be referred for trainee accountant recruitment?",o:["No, age problem","No, marks problem","No, experience problem","Yes"],a:4,e:"Under the special condition provided in the supplied question, Anurag qualifies for referral."},
+{id:130,q:"Find the next number: 0, 5, 12, 23, 36, ?",o:["45","53","55","57"],a:2,e:"Differences are 5,7,11,13; continuing the given pattern gives 53."},
+{id:131,q:"If SET = 37 and MIX = 35, then WAR = ?",o:["39","40","41","42"],a:1,e:"Applying the same letter-value pattern gives 39."},
+{id:132,q:"B is the husband of the granddaughter of A's father's father. If A is male, B is A's:",o:["Brother","Uncle","Brother-in-law","Cousin"],a:3,e:"A's father's father is his grandfather; the granddaughter's husband is A's brother-in-law in the supplied relationship."},
+{id:133,q:"A person travels according to a direction diagram from Y to M. If M is 5 km east of Y, then from M the direction of Y is:",o:["West","East","North","South"],a:1,e:"If M is east of Y, Y lies west of M."},
+{id:134,q:"Which vitamin helps in calcium absorption?",o:["Vitamin A","Vitamin B12","Vitamin C","Vitamin D"],a:4,e:"Vitamin D increases intestinal calcium absorption and supports bone health."},
+{id:135,q:"The normal human audible frequency range is approximately:",o:["2 Hz–2 kHz","10 Hz–10 kHz","20 Hz–20 kHz","200 Hz–20 kHz"],a:3,e:"The conventional human hearing range is about 20 Hz to 20 kHz."},
+{id:136,q:"The main function of ribosomes is:",o:["Protein synthesis","DNA replication","Lipid storage","Photosynthesis"],a:1,e:"Ribosomes translate mRNA and synthesise proteins."},
+{id:137,q:"Light waves are:",o:["Transverse electromagnetic waves","Longitudinal mechanical waves","Matter waves only","Sound waves"],a:1,e:"Light is an electromagnetic transverse wave."},
+{id:138,q:"Which statements about plants are correct? 1. They convert sunlight into chemical energy. 2. Chlorophyll helps photosynthesis. 3. Plants have no cell wall.",o:["Only 1","Only 1 and 2","Only 2 and 3","All three"],a:2,e:"Statements 1 and 2 are correct; plant cells do have cell walls."},
+{id:139,q:"Fat digestion in the small intestine is aided mainly by:",o:["Bile and pancreatic juice","Saliva only","Gastric juice only","Water only"],a:1,e:"Bile emulsifies fats and pancreatic lipase digests them."},
+{id:140,q:"Which vitamin is essential for normal blood clotting?",o:["Vitamin A","Vitamin C","Vitamin K","Vitamin D"],a:3,e:"Vitamin K is necessary for synthesis of several clotting factors."},
+{id:141,q:"The value of acceleration due to gravity at the exact centre of the Earth is:",o:["9.8 m/s²","4.9 m/s²","Infinite","Zero"],a:4,e:"At the exact centre, gravitational pulls cancel symmetrically, so g is zero."},
+{id:142,q:"A watch shows a ratio of sales in May to February as 8:7. What is the ratio?",o:["7:8","8:7","15:8","8:15"],a:2,e:"The supplied data gives the ratio S May : T Feb as 8:7."},
+{id:143,q:"Rajasthan's NSDP at constant 2011-12 prices was approximately:",o:["₹640581 crore","₹700581 crore","₹740581 crore","₹780581 crore"],a:3,e:"The supplied figure is ₹740581 crore."},
+{id:144,q:"Rajasthan's per capita income at current prices was approximately:",o:["₹157964","₹167964","₹177964","₹187964"],a:2,e:"The supplied figure is ₹167964."},
+{id:145,q:"The provisional Index of Industrial Production at constant prices was:",o:["151.77","161.77","171.77","181.77"],a:1,e:"The supplied figure is 151.77."},
+{id:146,q:"The percentage change in WPI in 2023-24 compared with 2022-23 was:",o:["+0.09%","-0.09%","-0.90%","+0.90%"],a:2,e:"The supplied figure is -0.09%."},
+{id:147,q:"The general WPI increase in 2023 compared with 2022 was approximately:",o:["0.54%","0.45%","1.54%","2.54%"],a:1,e:"The supplied figure is 0.54%."},
+{id:148,q:"Rajasthan ranks first in production of which combination according to the supplied data?",o:["Mustard, Moong and Moth","Wheat, Rice and Maize","Cotton, Bajra and Sugarcane","Gram, Wheat and Barley"],a:1,e:"The supplied answer identifies Mustard, Moong and Moth."},
+{id:149,q:"How many kilometres of roads were constructed under PMGSY in Rajasthan during 2022-23 according to the supplied data?",o:["627 km","727 km","827 km","927 km"],a:2,e:"The supplied figure is 727 km."},
+{id:150,q:"Which statement about Mukhyamantri Laghu Udyog Protsahan Yojana is NOT true?",o:["It supports small enterprises","It provides financial assistance through loans","It provides 6% subsidy on loans up to ₹5 crore","It is only for large industries"],a:3,e:"The supplied answer identifies the 6% subsidy statement as the NOT TRUE statement."}
+];
+
+let idx=0,ans={},reviewed={},seconds=10800,timerInt=null,student=null,submitted=false;
+const $=x=>document.getElementById(x);
+function buildPalette(){ $("palette").innerHTML=""; Q.forEach((x,i)=>{let b=document.createElement("button");b.className="p";b.id="p"+i;b.textContent=i+1;b.onclick=()=>show(i);$("palette").appendChild(b)})}
+function show(i){idx=i;let q=Q[i];$("qn").textContent=i+1;$("qt").textContent=q.q;$("opts").innerHTML="";q.o.forEach((x,n)=>{let d=document.createElement("label");d.className="opt";d.innerHTML='<input type="radio" name="answer" value="'+(n+1)+'"> <b>('+String.fromCharCode(65+n)+')</b> '+x;let r=d.querySelector("input");if(ans[i]===n+1)r.checked=true;r.onchange=()=>{ans[i]=n+1;updatePalette()};$("opts").appendChild(d)});updatePalette()}
+function updatePalette(){Q.forEach((q,i)=>{let b=$("p"+i);b.className="p";if(i===idx)b.classList.add("active");if(reviewed[i])b.classList.add("rev");else if(ans[i])b.classList.add("ans")})}
+function next(){if(idx<Q.length-1)show(idx+1)}function prev(){if(idx>0)show(idx-1)}function clearAns(){delete ans[idx];show(idx)}function review(){reviewed[idx]=!reviewed[idx];next()}
+function submitConfirm(){if(confirm("Are you sure you want to submit the test?"))finish()}
+function startTimer(){timerInt=setInterval(()=>{seconds--;let m=Math.floor(seconds/60),s=seconds%60;$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");if(seconds<=0){clearInterval(timerInt);finish(true)}},1000)}
+function finish(auto=false){if(submitted)return;submitted=true;clearInterval(timerInt);let c=0,w=0,u=0;Q.forEach((q,i)=>{if(!ans[i])u++;else if(ans[i]===q.a)c++;else w++});let sc=Math.max(0,c*2-w*.66),acc=c+w?c/(c+w)*100:0;let taken=10800-seconds,td=Math.floor(taken/60)+"m "+taken%60+"s";student.score=Number(sc.toFixed(2));student.accuracy=Number(acc.toFixed(1));student.correct=c;student.wrong=w;student.unattempted=u;student.time=td;student.timeSec=taken;let arr=JSON.parse(localStorage.getItem("ras_mock_attempts")||"[]");arr.push(student);arr.sort((a,b)=>b.score-a.score||b.accuracy-a.accuracy||a.timeSec-b.timeSec);localStorage.setItem("ras_mock_attempts",JSON.stringify(arr));let rank=arr.findIndex(x=>x.id===student.id)+1;$("score").textContent=student.score;$("rank").textContent="#"+rank;$("accuracy").textContent=student.accuracy+"%";$("time").textContent=td;$("correct").textContent=c;$("wrong").textContent=w;$("unattempted").textContent=u;let box=$("reviewBox");box.innerHTML="<h3 style='margin-bottom:12px'>Answers & Explanations</h3>";Q.forEach((q,i)=>{let your=ans[i]?String.fromCharCode(64+ans[i]):"Not Attempted";let correctLetter=String.fromCharCode(64+q.a);let cl=ans[i]===q.a?"correct":"wrong";box.innerHTML+=`<div class="reviewItem"><b>Q${i+1}. ${q.q}</b><br>Your Answer: <span class="${cl}">${your}</span><br>Correct Answer: <span class="correct">${correctLetter}</span> — ${q.o[q.a-1]}<br><small style="color:#94a3b8">Explanation: ${q.e}</small></div>`});$("test").style.display="none";$("result").style.display="block"}
+$("reg").onsubmit=e=>{e.preventDefault();student={id:Date.now()+"_"+Math.random(),name:$("name").value.trim(),email:$("email").value.trim(),exam:$("exam").value,tg:$("tg").value.trim()||"N/A",district:$("district").value.trim(),timestamp:new Date().toLocaleString()};$("home").style.display="none";$("test").style.display="block";buildPalette();show(0);startTimer()}
+function adminLogin(){let p=prompt("Enter Admin Password:");if(p==="Admin@Rehan2026")renderAdmin();else if(p!==null)alert("Unauthorized Access Denied.")}
+function renderAdmin(){$("home").style.display="none";$("test").style.display="none";$("result").style.display="none";$("admin").style.display="block";let a=JSON.parse(localStorage.getItem("ras_mock_attempts")||"[]");$("ac").textContent=a.length;$("hs").textContent=a.length?Math.max(...a.map(x=>x.score)).toFixed(2):"0";$("av").textContent=a.length?(a.reduce((s,x)=>s+x.score,0)/a.length).toFixed(2):"0";$("atable").innerHTML=a.map((x,i)=>`<tr><td>#${i+1}</td><td>${x.name}</td><td>${x.exam}</td><td>${x.district}</td><td>${x.tg}</td><td>${x.email}</td><td>${x.score}</td><td>${x.accuracy}%</td><td>${x.time}</td><td>${x.correct}/${x.wrong}/${x.unattempted}</td></tr>`).join("")}
+function csv(){let a=JSON.parse(localStorage.getItem("ras_mock_attempts")||"[]");if(!a.length)return alert("No records available.");let csv="Rank,Name,Exam,District,Telegram,Email,Score,Accuracy,Time,Correct,Wrong,Unattempted\n";a.forEach((x,i)=>csv+=`${i+1},"${x.name}","${x.exam}","${x.district}","${x.tg}","${x.email}",${x.score},${x.accuracy}%,"${x.time}",${x.correct},${x.wrong},${x.unattempted}\n`);let blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a1=document.createElement("a");a1.href=url;a1.download="RAS_Prelims_Test_Results.csv";a1.click();URL.revokeObjectURL(url)}
+</script>
+</body>
+</html>
