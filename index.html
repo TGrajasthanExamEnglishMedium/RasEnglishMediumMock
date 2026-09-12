@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajasthan Competitive Exams - English Medium</title>
+    <style>
+        /* Royal Blue & Gold Theme (Matching Your Logo) */
+        :root {
+            --bg-color: #0b1120;
+            --panel-bg: #151e32;
+            --primary-blue: #1e3a8a; /* Logo Blue */
+            --gold: #d4af37; /* Logo Gold */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #2a3b5c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; }
+
+        /* Header */
+        header { 
+            background: linear-gradient(135deg, #0f172a, var(--primary-blue)); 
+            padding: 20px; text-align: center; border-bottom: 3px solid var(--gold);
+        }
+        .logo-img { max-width: 180px; height: auto; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        .site-title { font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
+        .tagline { color: var(--gold); font-size: 0.95rem; font-weight: 600; margin-top: 5px; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: var(--gold); border-left: 4px solid var(--gold); padding-left: 10px; }
+
+        /* Test Cards Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        .card {
+            background-color: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px;
+            padding: 25px; transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4); border-color: var(--gold); }
+        
+        .status-badge {
+            position: absolute; top: 15px; right: -30px; background: var(--gold); color: #000;
+            font-size: 0.75rem; font-weight: 800; padding: 5px 30px; transform: rotate(45deg); letter-spacing: 1px;
+        }
+        .status-upcoming { background: #475569; color: #fff; }
+
+        .exam-tag { display: inline-block; background: rgba(212, 175, 55, 0.15); color: var(--gold); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
+        
+        .card h3 { font-size: 1.2rem; color: #fff; margin-bottom: 10px; }
+        .card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
+        
+        .btn { display: block; width: 100%; text-align: center; padding: 12px; background: var(--primary-blue); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700; transition: 0.2s; border: 1px solid transparent; }
+        .btn:hover { background: #172554; border-color: var(--gold); }
+        .btn-disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
+        .btn-disabled:hover { background: #1e293b; border-color: transparent; }
+
+        /* Footer */
+        footer { text-align: center; padding: 30px; margin-top: 50px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
+        .tg-link { color: var(--gold); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Logo Image -->
+        <img src="logo.jpg" alt="Rajasthan Exams Logo" class="logo-img">
+        <div class="site-title">RAJASTHAN COMPETITIVE EXAMS</div>
+        <div class="tagline">ENGLISH MEDIUM • EDUCATION. SUCCESS. KNOWLEDGE.</div>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">Active Test Series</h2>
+        <div class="grid">
+            
+            <!-- LIVE TEST 1 (Apni Purani File) -->
+            <div class="card">
+                <div class="status-badge">LIVE</div>
+                <span class="exam-tag">RAS / CET / LDC</span>
+                <h3>Rajasthan Current & Static GK - Mock 1</h3>
+                <p>Complete mock test covering the latest schemes, geography, and current affairs of Rajasthan.</p>
+                <div class="meta">
+                    <span>⏱️ 40 Mins</span>
+                    <span>📝 50 Qs</span>
+                    <span>🎯 100 Marks</span>
+                </div>
+                <!-- Yahan test1.html ka link diya hai -->
+                <a href="test1.html" class="btn">Start Free Test</a>
+            </div>
+
+        </div>
+
+        <h2 class="section-title" style="margin-top: 50px;">Upcoming Mock Tests</h2>
+        <div class="grid">
+            
+            <!-- UPCOMING TEST 2 -->
+            <div class="card">
+                <div class="status-badge status-upcoming">SOON</div>
+                <span class="exam-tag">Clerk Grade-II / Jr. Assistant</span>
+                <h3>English Grammar & Vocab - Test 1</h3>
+                <p>High-yield English language questions specifically targeted for upcoming clerical exams.</p>
+                <div class="meta">
+                    <span>⏱️ 30 Mins</span>
+                    <span>📝 40 Qs</span>
+                    <span>🎯 80 Marks</span>
+                </div>
+                <a href="#" class="btn btn-disabled">Available Soon</a>
+            </div>
+
+            <!-- UPCOMING TEST 3 -->
+            <div class="card">
+                <div class="status-badge status-upcoming">SOON</div>
+                <span class="exam-tag">Forester / Office Attendant</span>
+                <h3>Everyday Science & Math</h3>
+                <p>Foundation level mathematics and general science questions based on RSSB patterns.</p>
+                <div class="meta">
+                    <span>⏱️ 45 Mins</span>
+                    <span>📝 50 Qs</span>
+                    <span>🎯 100 Marks</span>
+                </div>
+                <a href="#" class="btn btn-disabled">Available Soon</a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>Join our official Telegram Channel for PDF notes and updates.</p>
+        <p><a href="https://t.me/RajasthanExamEnglishMedium" target="_blank" class="tg-link">@RajasthanExamEnglishMedium</a></p>
+    </footer>
+
+</body>
+</html>
