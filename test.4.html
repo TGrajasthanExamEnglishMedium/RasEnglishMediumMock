@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8b3f1f">
+<title>Rajasthan Geography - Test 4 | RAS Prelims</title>
+<style>
+:root{
+ --sand:#f3e3c3;--sand2:#fff8e9;--terracotta:#9b4323;--terracotta2:#c76432;
+ --maroon:#5a1f1b;--blue:#164e63;--green:#52734d;--gold:#d7a84b;
+ --ink:#2d241e;--muted:#76675b;--line:#ddc8a7;--white:#fffdf8;
+ --shadow:0 8px 28px rgba(75,45,25,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,system-ui,sans-serif}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(180deg,#fffaf0 0%,#f4e5c7 100%);color:var(--ink);min-height:100vh}
+button,input,select{font:inherit}
+button{touch-action:manipulation}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,var(--maroon),var(--terracotta));color:white;padding:11px 14px;box-shadow:0 4px 18px #0002}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.brand-logo{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--maroon);font-weight:900;border:2px solid #ffe9a8}
+.title{font-weight:850;font-size:15px}.subtitle{font-size:11px;opacity:.85;margin-top:2px}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}.timer{background:#24100f;border:1px solid #e7bf67;border-radius:10px;padding:7px 10px;font-weight:900;min-width:78px;text-align:center}
+.progress{height:4px;background:#ffffff30;margin:9px -14px -11px}.progress i{display:block;height:100%;background:var(--gold);width:0%;transition:width .25s}
+.warning{display:none;background:#b42318;color:#fff;text-align:center;padding:9px;font-size:12px;font-weight:800;position:sticky;top:63px;z-index:45}
+.shell{max-width:980px;margin:auto;padding:12px 10px 30px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.qhead{padding:12px 14px;background:linear-gradient(90deg,#fff2d6,#f8e3bb);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.qnum{font-weight:900;color:var(--maroon)}.jump{border:0;background:var(--blue);color:#fff;padding:9px 12px;border-radius:9px;font-weight:800;font-size:12px}
+.qbody{padding:18px 14px;min-height:360px}
+.qtext{font-size:17px;line-height:1.55;font-weight:700;margin-bottom:18px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:13px 12px;margin:10px 0;border:1px solid var(--line);border-radius:12px;background:#fffaf1;cursor:pointer;transition:.18s;line-height:1.4}
+.option:active{transform:scale(.99)}.option:hover{border-color:var(--terracotta)}
+.option input{margin-top:3px;accent-color:var(--terracotta);width:18px;height:18px;flex:none}
+.option.selected{background:#f8e7c9;border-color:var(--terracotta);box-shadow:0 0 0 2px #9b43231c}
+.actions{position:sticky;bottom:0;background:#fffdf8ee;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px;display:grid;grid-template-columns:1fr 1.15fr 1.35fr;gap:8px}
+.btn{border:0;border-radius:10px;padding:12px 8px;font-weight:850;cursor:pointer;transition:.16s}
+.btn:active{transform:translateY(1px) scale(.985)}.prev{background:#eadcc4;color:var(--ink)}.skip{background:#dfe8e0;color:#29452c}.save{background:var(--terracotta);color:white}
+.submit{margin:12px 10px 14px;width:calc(100% - 20px);background:var(--maroon);color:#fff;border:0;border-radius:11px;padding:13px;font-weight:900}
+.palette{display:none;padding:14px;background:#fff8ea;border-top:1px solid var(--line)}.palette-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}
+.pbtn{border:1px solid var(--line);background:#e7d8bd;color:var(--ink);height:39px;border-radius:9px;font-weight:850}.pbtn.answered{background:var(--green);color:#fff;border-color:var(--green)}.pbtn.current{outline:2px solid var(--gold);outline-offset:1px}
+.modal,.gate{position:fixed;inset:0;background:#29130fcc;z-index:100;display:none;align-items:center;justify-content:center;padding:14px}
+.modal.show,.gate.show{display:flex}.modalbox,.gatebox{width:min(680px,100%);max-height:92vh;overflow:auto;background:var(--sand2);border:2px solid var(--gold);border-radius:18px;box-shadow:0 20px 60px #0005;padding:18px}
+.modalbox h2,.gatebox h2{color:var(--maroon);margin-bottom:6px}.hint{font-size:12px;color:var(--muted);margin-bottom:15px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:850;color:var(--maroon)}.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:white;outline:none}.field input:focus,.field select:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px #9b43231a}
+.start{width:100%;margin-top:15px;background:var(--terracotta);color:#fff;border:0;border-radius:11px;padding:13px;font-weight:900}.close{float:right;border:0;background:transparent;font-size:23px;color:var(--maroon)}
+.result{display:none;padding:15px}.score{background:linear-gradient(135deg,var(--maroon),var(--terracotta));color:#fff;border-radius:16px;padding:22px;text-align:center}.score strong{font-size:42px;color:#ffe19a}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#fffaf0;color:var(--ink);padding:11px;border-radius:10px;border:1px solid var(--line);font-size:12px}.stat b{font-size:18px;color:var(--maroon)}.rank{margin-top:12px;background:#fff1cf;border:1px solid var(--gold);border-radius:12px;padding:14px;text-align:center;color:var(--maroon);font-weight:900}
+.review{margin-top:15px}.review-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0}.correct{background:#e2f0df;border-color:#719b68}.wrong{background:#fae0dc;border-color:#bd604e}
+.admin{display:none;padding:15px}.adminbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;overflow:auto}.admin-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.danger{background:#9b4323;color:white;border:0;border-radius:8px;padding:8px}.admin table{width:100%;border-collapse:collapse;font-size:11px}.admin th,.admin td{border-bottom:1px solid var(--line);padding:8px;text-align:left;white-space:nowrap}.admin th{background:#f5e4c4;color:var(--maroon)}
+.note{font-size:11px;color:var(--muted);margin-top:10px}
+@media(max-width:600px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.qbody{min-height:calc(100vh - 210px)}.qtext{font-size:16px}.actions{grid-template-columns:1fr 1.1fr 1.35fr}.palette-grid{grid-template-columns:repeat(6,1fr)}.pbtn{height:36px}}
+</style>
+</head>
+<body>
+<header class="topbar" id="topbar">
+ <div class="toprow">
+  <div class="brand" id="brand" title="Admin">
+   <div class="brand-logo">RJ</div><div><div class="title">RAJASTHAN GEOGRAPHY • TEST 4</div><div class="subtitle">RAS Prelims • Rajasthan Exam English Medium</div></div>
+  </div>
+  <div class="timer" id="timer">120:00</div>
+ </div>
+ <div class="progress"><i id="progress"></i></div>
+</header>
+<div class="warning" id="warning">⚠️ Tab switching detected</div>
+
+<div id="testScreen" class="shell" style="display:none">
+ <div class="card">
+  <div class="qhead"><span class="qnum">Question <span id="qNum">1</span> / <span id="totalQ">0</span></span><button class="jump" onclick="togglePalette()">◉ Questions</button></div>
+  <div class="palette" id="palette"><div class="palette-grid" id="paletteGrid"></div></div>
+  <div class="qbody" id="qBody"><div class="qtext" id="qText"></div><div id="options"></div></div>
+  <div class="actions">
+   <button class="btn prev" onclick="prevQuestion()">← Previous</button>
+   <button class="btn skip" onclick="skipQuestion()">Skip →</button>
+   <button class="btn save" onclick="saveAndNext()">Save & Next ✓</button>
+  </div>
+  <button class="submit" onclick="submitTest()">FINAL SUBMIT</button>
+ </div>
+</div>
+
+<div id="resultScreen" class="result shell">
+ <div class="score"><div>TEST SUBMITTED</div><strong id="resScore">0</strong><div>Score</div></div>
+ <div class="stats">
+  <div class="stat">Attempted<br><b id="resAttempted">0</b></div>
+  <div class="stat">Correct<br><b id="resCorrect">0</b></div>
+  <div class="stat">Wrong<br><b id="resWrong">0</b></div>
+ </div>
+ <div class="rank">Your Rank: <span id="resRank">—</span><div class="note">Only your rank is shown to aspirants.</div></div>
+ <div class="review" id="review"></div>
+</div>
+
+<div class="gate show" id="startGate">
+ <div class="gatebox">
+  <h2>🏜️ Start Rajasthan Geography Test 4</h2>
+  <div class="hint">Enter your details before starting. Your information is used for test ranking/admin records.</div>
+  <form id="candidateForm">
+   <div class="formgrid">
+    <div class="field"><label>Full Name *</label><input id="name" required autocomplete="name"></div>
+    <div class="field"><label>Exam Preparing For *</label><select id="exam" required><option value="">Select</option><option>RAS</option><option>CET</option><option>REET</option><option>Other Rajasthan Exams</option></select></div>
+    <div class="field"><label>District *</label><input id="district" required placeholder="e.g. Ajmer"></div>
+    <div class="field"><label>Telegram ID</label><input id="telegram" placeholder="@username"></div>
+    <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email"></div>
+    <div class="field"><label>Date of Birth *</label><input id="dob" type="date" required></div>
+   </div>
+   <button class="start" type="submit">START TEST →</button>
+  </form>
+  <div class="note">DOB uses your phone's native date picker for easier entry.</div>
+ </div>
+</div>
+
+<div class="modal" id="jumpModal"><div class="modalbox"><button class="close" onclick="closeAdmin()">×</button><h2>Admin Panel</h2><div class="hint">Admin access is intentionally hidden behind the brand button.</div>
+ <div id="adminLogin"><input id="adminPass" type="password" placeholder="Admin password" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:9px"><button class="start" onclick="adminLogin()">OPEN ADMIN</button></div>
+ <div class="admin" id="adminContent"><div class="adminbox"><div class="admin-head"><b>Live Test Submissions</b><button class="danger" onclick="clearDemo()">Clear Demo Data</button></div><div id="adminTable"></div><div class="note">For truly live multi-device ranking, connect the Firebase config in the script.</div></div></div>
+ </div></div>
+
+<script>
+
+const questions = [
+{q:"Which division of Rajasthan covers the largest area of the state?",o:["Bikaner","Udaipur","Jodhpur","Bharatpur"],a:2,e:"Jodhpur division covers the largest area among Rajasthan's divisions."},
+{q:"What is the difference between the east-west and north-south extent of Rajasthan?",o:["48 km","43 km","62 km","58 km"],a:1,e:"The difference between the east-west and north-south extents is 43 km."},
+{q:"Arrange the following newly formed districts in chronological order of formation: Dholpur, Rajsamand, Karauli and Pratapgarh.",o:["Rajsamand, Dholpur, Karauli, Pratapgarh","Karauli, Pratapgarh, Rajsamand, Dholpur","Dholpur, Rajsamand, Karauli, Pratapgarh","Karauli, Rajsamand, Pratapgarh, Dholpur"],a:2,e:"The correct chronological order is Dholpur, Rajsamand, Karauli and Pratapgarh."},
+{q:"The approximate north-south and east-west extent of Rajasthan respectively is:",o:["832 km and 872 km","826 km and 869 km","840 km and 865 km","835 km and 864 km"],a:1,e:"Rajasthan extends approximately 826 km north-south and 869 km east-west."},
+{q:"Which of the following is NOT situated in southern Rajasthan?",o:["Kanthal","Chhappan Plain","Devaliya","Thali"],a:3,e:"Thali is associated with the desert region rather than southern Rajasthan."},
+{q:"In the context of the Thar Desert, what is a 'Parabolic'?",o:["Sand dune","Lake","Khadin","Tanka"],a:0,e:"A parabolic is a type of sand dune."},
+{q:"The Vindhyan Escarpment region of Rajasthan is mainly found in which area?",o:["Kota–Jhalawar region","Dholpur–Karauli region","Alwar–Bharatpur region","Alwar–Sawai Madhopur region"],a:1,e:"The Vindhyan Escarpment is prominent in the Dholpur–Karauli area."},
+{q:"Which of the following is NOT a cause of desertification in Rajasthan?",o:["Canal irrigation","Change in land-use pattern","Overgrazing","Accumulation of sand and sand dunes"],a:0,e:"The listed question identifies canal irrigation as the exception."},
+{q:"Which of the following is NOT a part of the semi-desert physical region of Rajasthan?",o:["Shekhawati Region","Ghaggar Plain","Godwar Region","Chhappan Plain"],a:3,e:"Chhappan Plain belongs to southern Rajasthan."},
+{q:"Which of the following is NOT correctly matched?",o:["Luni Basin — Nehri","Nagaur Upland — Dora Mountain","Shekhawati Region — Johad","Ghaggar Plain — Nali"],a:1,e:"Nagaur Upland–Dora Mountain is the incorrectly matched pair."},
+{q:"Kala Bhura Dungar forms the western boundary of the Luni Basin; Salisar, Jassusar and Malsisar are in Shekhawati; the Ghaggar riverbed near Hanumangarh is called Nali. Which statements are correct?",o:["Only B and C","Only A and C","Only C","Only A"],a:0,e:"Statements B and C are correct according to the supplied set."},
+{q:"Which statement is NOT correct regarding the Dag-Gangdhar upland of the Hadoti Plateau?",o:["It is the smallest physiographic unit of the Hadoti Plateau.","It is located in the south-western part of the Hadoti Plateau.","It reaches a height of about 450 metres.","The Chambal River forms its south-eastern boundary."],a:3,e:"The Chambal boundary statement is the incorrect one in the supplied set."},
+{q:"Which group of districts is correctly arranged in descending order according to received monsoon rainfall?",o:["Dholpur, Rajsamand, Jalore","Bhilwara, Baran, Sikar","Rajsamand, Jalore, Dholpur","Pali, Jaipur, Bharatpur"],a:0,e:"The supplied correct sequence is Dholpur, Rajsamand and Jalore."},
+{q:"In which district of Rajasthan are Steppe climatic conditions NOT found?",o:["Pali","Jodhpur","Jalore","Jaipur"],a:3,e:"Jaipur is the exception in the supplied classification."},
+{q:"According to Köppen, which group of districts falls under the 'Aw' climatic region?",o:["Udaipur, Jalore, Sirohi","Jaisalmer, Bikaner, Ganganagar","Banswara, Dungarpur, Jhalawar","Pali, Jaipur, Churu"],a:2,e:"Banswara, Dungarpur and Jhalawar fall under the Aw climate in the supplied classification."},
+{q:"According to Köppen's classification, the BWhw climate is found in:",o:["Kota, Bundi, Jhalawar","Bikaner, Jaisalmer, Jodhpur","Jhunjhunu, Sikar, Alwar","Jaisalmer, Sikar, Barmer"],a:1,e:"The supplied answer is Bikaner, Jaisalmer and Jodhpur."},
+{q:"Which of the following rivers of Rajasthan drain into the Arabian Sea? A. Mahi B. Chambal C. Sabarmati D. Luni",o:["A and B","A, B and C","A, B and D","A, C and D"],a:1,e:"The supplied answer is A, B and C."},
+{q:"In which areas is flooding mainly observed in the Ghaggar River Valley? A. Suratgarh B. Borpal C. Manekthar D. Khandela",o:["B, C and D","A, B and C","A, C and D","A, B, C and D"],a:1,e:"The supplied answer is A, B and C."},
+{q:"The confluence of which three rivers is located at Bigod in Bhilwara district?",o:["Berach, Menal and Kothari","Banas, Berach and Menal","Banas, Menal and Dai","Banas, Dai and Kothari"],a:1,e:"At Bigod, Banas, Berach and Menal meet according to the supplied question."},
+{q:"Which of the following rivers is NOT a tributary of the Chambal River?",o:["Kali Sindh","Banas","Parbati","Luni"],a:3,e:"Luni is not a tributary of the Chambal."},
+{q:"Which river originates from the western slopes of the Aravalli, flows through parts of Sirohi and ultimately enters the Rann of Kachchh?",o:["Mahi","West Banas","Sabarmati","Moren"],a:1,e:"The West Banas follows this course and enters the Rann of Kachchh."},
+{q:"In which districts are Salar forests found?",o:["Alwar, Chittorgarh, Udaipur","Kota, Bundi, Tonk","Sirohi, Pali, Dungarpur","Baran, Sawai Madhopur, Dausa"],a:0,e:"The supplied answer is Alwar, Chittorgarh and Udaipur."},
+{q:"According to the position as on 31 March 2023, which three districts had the largest forest area in Rajasthan?",o:["Udaipur, Alwar, Baran","Udaipur, Baran, Pratapgarh","Udaipur, Alwar, Chittorgarh","Udaipur, Baran, Karauli"],a:3,e:"The supplied answer is Udaipur, Baran and Karauli."},
+{q:"According to the Rajasthan Forest Department Administrative Report 2023–24, which three districts had the highest forest area?",o:["Bundi, Sirohi, Banswara","Udaipur, Alwar, Pratapgarh","Udaipur, Baran, Karauli","Chittorgarh, Alwar, Sirohi"],a:2,e:"The supplied answer is Udaipur, Baran and Karauli."},
+{q:"What type of soil is found in Dungarpur and Banswara districts?",o:["Black soil","Red-loamy soil","Yellow-brown soil","Alluvial soil"],a:1,e:"Red-loamy soil is characteristic of Dungarpur and Banswara."},
+{q:"Which soil is predominant in Dungarpur and Banswara?",o:["Gypsiferous soil","Grey-brown alluvial soil","Mountain soil","Red-loamy soil"],a:3,e:"Red-loamy soil is predominant in these districts."},
+{q:"Which soil is predominantly found in Udaipur and Kota districts?",o:["Calcareous brown soil","New brown soil","Mountain soil","Red loam"],a:2,e:"The supplied answer identifies Mountain soil."},
+{q:"The yellow-brown soil regions of Rajasthan include:",o:["Jodhpur, Alwar and Bhilwara","Bhilwara, Tonk and Udaipur","Nagaur, Ajmer and Tonk","Udaipur, Kota and Banswara"],a:1,e:"Bhilwara, Tonk and Udaipur are the supplied correct group."},
+{q:"Which irrigation project is associated with Dungarpur district?",o:["Panchna","Som-Kamla-Amba","Jawai","Siddhmukh"],a:1,e:"Som-Kamla-Amba is associated with Dungarpur."},
+{q:"In which major irrigation project of Rajasthan has sprinkler irrigation been made compulsory?",o:["Mahi Canal","Narmada Canal","Indira Gandhi Canal","Chambal Canal"],a:1,e:"Sprinkler irrigation has been made compulsory under the Narmada Canal project."},
+{q:"The share of area irrigated by the Bhakra Canal in Rajasthan is approximately:",o:["21–22%","11–12%","15–16%","18–19%"],a:2,e:"The supplied figure is approximately 15–16%."},
+{q:"Which districts are major producers of Jowar in Rajasthan?",o:["Ganganagar–Hanumangarh","Ajmer–Nagaur","Dungarpur–Banswara","Barmer–Jaisalmer"],a:1,e:"Ajmer and Nagaur are identified as major Jowar-producing districts."},
+{q:"Which districts are known for opium production in Rajasthan?",o:["Chittorgarh and Jhalawar","Jaipur and Dausa","Dholpur and Bharatpur","Ajmer and Nagaur"],a:0,e:"Chittorgarh and Jhalawar are major opium-producing districts."},
+{q:"'Mahi Kanchan' and 'RCB 911' are hybrid varieties of:",o:["Maize and barley respectively","Maize and rice respectively","Maize and pearl millet respectively","Pearl millet and maize respectively"],a:1,e:"The supplied answer identifies them as maize and rice varieties respectively."},
+{q:"Which is the correct group of districts included in Agro-Climatic Region III-A?",o:["Rajsamand–Bhilwara–Chittorgarh","Ajmer–Dausa–Tonk–Jaipur","Kota–Bundi–Jhalawar","Alwar–Bharatpur–Karauli"],a:0,e:"The supplied answer is Rajsamand, Bhilwara and Chittorgarh."},
+{q:"The major Kharif crops of which agro-climatic region are maize, rice, sugarcane and sesame?",o:["Arid Southern Plain","Humid South-Eastern Plain","Semi-Humid Southern Plain","Irrigated North-Western Plain"],a:0,e:"The supplied answer identifies the Arid Southern Plain."},
+{q:"According to the 2019 Livestock Census, the total livestock population of Rajasthan was approximately:",o:["57.7 million","56.8 million","68.8 million","67.8 million"],a:1,e:"The supplied figure is approximately 56.8 million."},
+{q:"'Nali' is a breed of:",o:["Horse","Sheep","Camel","Cattle"],a:1,e:"Nali is a breed of sheep."},
+{q:"The National Research Centre on Camel is located at:",o:["Jodhpur","Ajmer","Bikaner","Jaipur"],a:2,e:"The National Research Centre on Camel is located at Bikaner."},
+{q:"Which cattle breed is commonly found in western Ganganagar, north-eastern Jaisalmer and western Bikaner?",o:["Rathi","Malvi","Gir","Sanchori"],a:0,e:"Rathi cattle are associated with this region."},
+{q:"Rajasthan is the sole producer in India of which group of minerals?",o:["Mica, wollastonite and zinc ore","Mica, gypsum and uranium","Gypsum, wollastonite and uranium","Lead-zinc ore, selenite and wollastonite"],a:3,e:"The supplied answer is lead-zinc ore, selenite and wollastonite."},
+{q:"Which city of Rajasthan is also known as the 'Granite City'?",o:["Jaipur","Jalore","Jaisalmer","Jodhpur"],a:1,e:"Jalore is known as the Granite City."},
+{q:"Which state produces the maximum gypsum in India?",o:["Tamil Nadu","Gujarat","Rajasthan","Madhya Pradesh"],a:2,e:"Rajasthan is India's leading gypsum-producing state."},
+{q:"Match the mineral resources with their production centres: Tungsten–Lilwani; Manganese–Degana; Copper–Khetri-Singhana; Lead-Zinc–Jawar Mala. Which code is correct?",o:["I-B, II-A, III-D, IV-C","I-A, II-B, III-C, IV-D","I-C, II-D, III-B, IV-A","I-D, II-C, III-A, IV-B"],a:0,e:"The supplied matching is Tungsten–Degana, Manganese–Lilwani, Copper–Khetri-Singhana and Lead-Zinc–Jawar Mala."},
+{q:"Which of the following is the incorrect pair?",o:["Bajla–Kabra — Ajmer","Mandal — Bhilwara","Karauli–Kasouli — Rajsamand","Inda Ki Dhani — Kota"],a:3,e:"The supplied answer identifies Inda Ki Dhani–Kota as incorrect."},
+{q:"In which year was the Rajasthan Solar Energy Policy announced?",o:["2015","2017","2019","2018"],a:2,e:"The Rajasthan Solar Energy Policy was announced in 2019."},
+{q:"Devgarh Wind Energy Project is located in:",o:["Jaisalmer","Hanumangarh","Pratapgarh","Baran"],a:2,e:"The supplied answer is Pratapgarh."},
+{q:"The Kalisingh Super Thermal Power Station is located in:",o:["Baran","Jhalawar","Dungarpur","Banswara"],a:1,e:"The Kalisingh Super Thermal Power Station is in Jhalawar."},
+{q:"Which solar power plant–district pair is NOT correctly matched?",o:["Dhuni — Sikar","Agorariya — Barmer","Gorir — Jhunjhunu","Mokla — Jaisalmer"],a:0,e:"The supplied answer identifies Dhuni–Sikar as incorrect."},
+{q:"Which industrial undertaking located in Rajasthan is NOT a Government of India undertaking?",o:["Instrumentation Limited, Kota","Sambhar Salts Limited, Sambhar","Modern Bakeries India Limited, Jaipur","Sri Ganganagar Sugar Mills Limited, Sri Ganganagar"],a:3,e:"Sri Ganganagar Sugar Mills Limited is the supplied answer."},
+{q:"The textile industry of Pali is responsible for pollution of which river?",o:["Sukri","Lilri","Jawai","None of these"],a:3,e:"The supplied answer is None of these."},
+{q:"Shriram Fertilizer Industry is located at:",o:["Beawar","Kota","Didwana","Pachpadra"],a:1,e:"Shriram Fertilizer Industry is located at Kota."},
+{q:"Which of the following is NOT correctly matched?",o:["Sodium Sulphate — Didwana","Glass — Dholpur","Fertilizer — Gadepan","Water Meter — Bhiwadi"],a:3,e:"The supplied answer identifies Water Meter–Bhiwadi as the incorrect pair."},
+{q:"Which of the following cement-unit/location pairs are correctly matched? A. Hindustan Cement Limited—Beawar B. Birla White Cement—Gotan C. Rajshree Cement—Mirapur D. Shree Cement—Chanderiya",o:["A, B and C","B and C","B and D","A and B"],a:1,e:"The supplied answer is B and C."},
+{q:"According to Census 2011, the district with the lowest population growth rate during 2001–2011 was:",o:["Jhunjhunu","Ganganagar","Bundi","Pali"],a:1,e:"The supplied answer is Ganganagar."},
+{q:"According to Census 2011, the district having the second-highest percentage of Scheduled Tribe population was:",o:["Banswara","Pratapgarh","Dungarpur","Dausa"],a:1,e:"The supplied answer is Pratapgarh."},
+{q:"According to Census 2011, the district with the lowest literacy rate in Rajasthan was:",o:["Banswara","Dungarpur","Sirohi","Jalore"],a:3,e:"The supplied answer is Jalore."},
+{q:"According to Census 2011, the highest percentage of Scheduled Caste population was found in:",o:["Karauli","Hanumangarh","Bikaner","Ganganagar"],a:1,e:"The supplied answer is Hanumangarh."},
+{q:"According to Census 2011, which district had the minimum decadal population growth rate during 2001–2011?",o:["Barmer","Sri Ganganagar","Pali","Bundi"],a:1,e:"The supplied answer is Sri Ganganagar."},
+{q:"Gogolav Conservation Reserve is located in which district?",o:["Pali","Churu","Nagaur","Jalore"],a:2,e:"Gogolav Conservation Reserve is in Nagaur district."},
+{q:"With reference to Project Great Indian Bustard, which statement is correct?",o:["It is only a grassland irrigation project.","It was started by the Ministry of Environment to protect the Great Indian Bustard.","It is a tourism project of Rajasthan.","It is a crop diversification programme."],a:1,e:"The project focuses on conservation of the Great Indian Bustard."},
+{q:"Which of the following are tiger reserves of Rajasthan? A. Sariska B. Ramgarh Vishdhari C. Ranthambore D. Mukundra",o:["A, B, C and D","A, B and C","B, C and D","A, C and D"],a:0,e:"All four listed reserves are tiger reserves of Rajasthan."},
+{q:"Which of the following is a Geo-tourism site?",o:["Pushkar Lake","Ramgarh Crater","Bap Boulder","Todgarh"],a:1,e:"Ramgarh Crater is a major geo-tourism/geoheritage site."},
+{q:"Which tourism centre–location pair is NOT correctly matched?",o:["Mehrangarh — Bikaner","Jaswant Thada — Jodhpur","Sunehri Kothi — Tonk","Rani Ji Ki Baori — Bundi"],a:0,e:"Mehrangarh Fort is located in Jodhpur, not Bikaner."},
+{q:"Mount Abu and Ranakpur are included in which tourism circuit?",o:["Dhundhar","Shekhawati","Godwar","Mewar"],a:2,e:"The supplied answer is the Godwar circuit."},
+{q:"Match the tourist sites with locations: Bala Quila, Dilwara Temples, Sunehri Kothi, Chaurasi Khambon Ki Chhatri.",o:["A-iii, B-iv, C-i, D-ii","A-iv, B-iii, C-ii, D-i","A-iv, B-i, C-ii, D-iii","A-ii, B-i, C-iv, D-iii"],a:2,e:"The supplied matching is Bala Quila–Alwar, Dilwara–Mount Abu, Sunehri Kothi–Tonk and Chaurasi Khambon Ki Chhatri–Bundi."},
+{q:"Which road has NOT been selected as an 'Expressway' in Rajasthan?",o:["Kishangarh–Makrana","Alwar–Shahpura","Rajsamand–Bhilwara","Ganganagar–Sirohi"],a:0,e:"The supplied answer is Kishangarh–Makrana."},
+{q:"New National Highway-52 (NH-52) does NOT pass through which city?",o:["Tonk","Kota","Bundi","Baran"],a:3,e:"The supplied answer is Baran."},
+{q:"Ramgarh Crater, a major geoheritage site, is located in:",o:["Kota district","Jhalawar district","Bundi district","Baran district"],a:3,e:"Ramgarh Crater is located in Baran district."},
+{q:"Drought-Prone Areas Programme (DPAP) was started in Rajasthan in:",o:["1974–75","1977–78","1982–83","1986–87"],a:0,e:"DPAP was started in Rajasthan in 1974–75."},
+{q:"The Drought Development Programme (DDP) is financed by the Government of India and Government of Rajasthan respectively in which ratio?",o:["60:40","25:75","75:25","50:50"],a:2,e:"The supplied answer is 75:25."},
+{q:"Why is the groundwater level in Rajasthan continuously declining?",o:["Only because of high rainfall","Low rainfall and excessive groundwater exploitation","Only because of canal irrigation","Only because of floods"],a:1,e:"Low rainfall combined with excessive groundwater exploitation contributes to groundwater decline."},
+{q:"'Mor Bangiya, Pahravna and Tanna' are three types of marriage prevalent among which tribe?",o:["Bhil","Sahariya","Garasia","Meena"],a:2,e:"These marriage forms are associated with the Garasia tribe."},
+{q:"The Sahariya tribe is mainly concentrated in:",o:["Nainwa Tehsil of Bundi district","Anta Tehsil of Baran district","Khanpur and Pidawa Tehsils of Jhalawar district","Shahabad and Kishanganj Tehsils of Baran district"],a:3,e:"The Sahariya tribe is concentrated mainly in Shahabad and Kishanganj tehsils of Baran."},
+{q:"Pahravna and Tanna marriages are prevalent among:",o:["Sansi tribe","Bhil tribe","Garasia tribe","Kanjar tribe"],a:2,e:"Pahravna and Tanna are associated with the Garasia tribe."},
+{q:"Which of the following is the correct match regarding major irrigation projects?",o:["Siddhmukh — Bikaner","Jakham — Pratapgarh","Yamuna Link Canal — Bharatpur","Bisalpur — Tonk"],a:0,e:"The supplied answer is Siddhmukh–Bikaner."},
+{q:"Som-Kamla-Amba Irrigation Project was constructed mainly for which district?",o:["Udaipur","Chittorgarh","Dungarpur","Rajsamand"],a:2,e:"Som-Kamla-Amba is associated mainly with Dungarpur."},
+{q:"The main Kharif crops of the Humid South-Eastern Plain include:",o:["Maize, rice, sugarcane and sesame","Wheat, gram and mustard","Bajra, moth and guar","Cotton, wheat and barley"],a:0,e:"The supplied answer is maize, rice, sugarcane and sesame."},
+{q:"Which of the following statements correctly identifies Rajasthan's BWhw climate region?",o:["It occurs mainly in Kota, Bundi and Jhalawar.","It occurs mainly in Bikaner, Jaisalmer and Jodhpur.","It occurs mainly in Jhunjhunu, Sikar and Alwar.","It occurs mainly in Jaisalmer, Sikar and Barmer."],a:1,e:"The supplied answer is Bikaner, Jaisalmer and Jodhpur."}
+];
+
+const ADMIN_PASSWORD="change-this-password";
+/* OPTIONAL FIREBASE:
+   Add your Firebase web-app config below. The page works in DEMO mode without it.
+   For production, use Firestore + security rules/Cloud Functions so rank calculation
+   is server-side and raw candidate records are not exposed to aspirants.
+*/
+const firebaseConfig=null; // replace with your Firebase config object
+
+let currentQuestion=0,userAnswers=new Array(questions.length).fill(null),timeLeft=120*60,timerInterval=null,submitted=false,candidate=null;
+
+const $=id=>document.getElementById(id);
+$("totalQ").textContent=questions.length;
+
+function init(){
+ buildPalette(); renderQuestion(0); updateProgress();
+}
+function buildPalette(){
+ const g=$("paletteGrid");g.innerHTML="";
+ questions.forEach((q,i)=>{const b=document.createElement("button");b.className="pbtn";b.id="p"+i;b.textContent=i+1;b.onclick=()=>{showQuestion(i);togglePalette(false)};g.appendChild(b)});
+}
+function updatePalette(){
+ questions.forEach((q,i)=>{const b=$("p"+i);b.className="pbtn"+(userAnswers[i]!==null?" answered":"")+(i===currentQuestion?" current":"")});
+}
+function showQuestion(i){
+ currentQuestion=Math.max(0,Math.min(i,questions.length-1));renderQuestion(currentQuestion);
+}
+function renderQuestion(i){
+ $("qNum").textContent=i+1;$("qText").textContent=questions[i].q;
+ const box=$("options");box.innerHTML="";
+ questions[i].o.forEach((opt,n)=>{
+  const label=document.createElement("label");label.className="option"+(userAnswers[i]===n?" selected":"");
+  label.innerHTML=`<input type="radio" name="answer" value="${n}"><span><b>(${String.fromCharCode(65+n)})</b> ${opt}</span>`;
+  const r=label.querySelector("input");r.checked=userAnswers[i]===n;
+  r.onchange=()=>{userAnswers[i]=n;document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));label.classList.add("selected");updatePalette()};
+  box.appendChild(label);
+ });
+ updatePalette();updateProgress();
+ $("qBody").scrollTo({top:0,behavior:"smooth"});
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){$("progress").style.width=((currentQuestion+1)/questions.length*100)+"%"}
+function nextQuestion(){if(currentQuestion<questions.length-1)showQuestion(currentQuestion+1)}
+function prevQuestion(){if(currentQuestion>0)showQuestion(currentQuestion-1)}
+function skipQuestion(){nextQuestion()}
+function saveAndNext(){nextQuestion()}
+function togglePalette(force){
+ const p=$("palette");p.style.display=force===false?"none":(p.style.display==="block"?"none":"block");
+}
+function closeAdmin(){$("jumpModal").classList.remove("show")}
+function startTimer(){
+ clearInterval(timerInterval);
+ timerInterval=setInterval(()=>{if(timeLeft<=0){clearInterval(timerInterval);submitTest(true);return}timeLeft--;let m=Math.floor(timeLeft/60),s=timeLeft%60;$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")},1000);
+}
+$("candidateForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ candidate={name:$("name").value.trim(),exam:$("exam").value,district:$("district").value.trim(),telegram:$("telegram").value.trim(),email:$("email").value.trim(),dob:$("dob").value};
+ $("startGate").classList.remove("show");$("testScreen").style.display="block";init();startTimer();
+});
+function submitTest(auto=false){
+ if(submitted)return;
+ if(!auto&&!confirm("Are you sure you want to submit the test?"))return;
+ submitted=true;clearInterval(timerInterval);
+ let correct=0,wrong=0,attempted=0;
+ questions.forEach((q,i)=>{if(userAnswers[i]!==null){attempted++;if(userAnswers[i]===q.a)correct++;else wrong++}});
+ const score=Math.max(0,correct*2-wrong*0.66);
+ const record={...candidate,score:Number(score.toFixed(2)),correct,wrong,attempted,test:"Rajasthan Geography Test 4",timestamp:new Date().toISOString()};
+ saveRecord(record);
+ $("testScreen").style.display="none";$("resultScreen").style.display="block";
+ $("resScore").textContent=score.toFixed(2);$("resAttempted").textContent=attempted;$("resCorrect").textContent=correct;$("resWrong").textContent=wrong;
+ calculateRank(record).then(r=>$("resRank").textContent=r);
+ renderReview();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderReview(){
+ const box=$("review");box.innerHTML="<h3 style='color:var(--maroon);margin:18px 0 8px'>Answer Review</h3>";
+ questions.forEach((q,i)=>{
+  const card=document.createElement("div");card.className="review-card";
+  let h=`<b>Q${i+1}. ${q.q}</b><div style="margin-top:8px">`;
+  q.o.forEach((opt,n)=>{h+=`<div class="${n===q.a?"correct":(userAnswers[i]===n?"wrong":"")}" style="padding:8px;border-radius:7px;margin:5px 0">${String.fromCharCode(65+n)}. ${opt}</div>`});
+  h+=`</div><div class="note"><b>Correct:</b> ${String.fromCharCode(65+q.a)} — ${q.o[q.a]}<br>${q.e}</div>`;
+  card.innerHTML=h;box.appendChild(card);
+ });
+}
+function saveRecord(record){
+ const arr=JSON.parse(localStorage.getItem("rj_test4_records")||"[]");arr.push(record);localStorage.setItem("rj_test4_records",JSON.stringify(arr));
+}
+async function calculateRank(record){
+ const arr=JSON.parse(localStorage.getItem("rj_test4_records")||"[]");
+ const sorted=arr.filter(x=>x.test===record.test).sort((a,b)=>b.score-a.score||a.timestamp.localeCompare(b.timestamp));
+ return sorted.findIndex(x=>x.timestamp===record.timestamp)+1;
+}
+$("brand").onclick=()=>{$("jumpModal").classList.add("show")};
+function adminLogin(){
+ if($("adminPass").value!==ADMIN_PASSWORD){alert("Incorrect admin password");return}
+ $("adminLogin").style.display="none";$("adminContent").style.display="block";renderAdmin();
+}
+function renderAdmin(){
+ const arr=JSON.parse(localStorage.getItem("rj_test4_records")||"[]").sort((a,b)=>b.score-a.score);
+ if(!arr.length){$("adminTable").innerHTML="<p>No submissions yet.</p>";return}
+ let h="<table><tr><th>Rank</th><th>Name</th><th>Exam</th><th>District</th><th>Telegram</th><th>Email</th><th>DOB</th><th>Score</th><th>Correct</th><th>Wrong</th><th>Attempted</th><th>Time</th></tr>";
+ arr.forEach((x,i)=>h+=`<tr><td>${i+1}</td><td>${esc(x.name)}</td><td>${esc(x.exam)}</td><td>${esc(x.district)}</td><td>${esc(x.telegram)}</td><td>${esc(x.email)}</td><td>${esc(x.dob)}</td><td>${x.score}</td><td>${x.correct}</td><td>${x.wrong}</td><td>${x.attempted}</td><td>${new Date(x.timestamp).toLocaleString()}</td></tr>`);
+ $("adminTable").innerHTML=h+"</table>";
+}
+function clearDemo(){if(confirm("Delete local demo submissions?")){localStorage.removeItem("rj_test4_records");renderAdmin()}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+window.addEventListener("blur",()=>{if(!submitted){$("warning").style.display="block";setTimeout(()=>$("warning").style.display="none",2500)}});
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")nextQuestion();if(e.key==="ArrowLeft")prevQuestion()});
+</script>
+</body></html>
